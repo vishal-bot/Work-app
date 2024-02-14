@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, Navigate } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -10,8 +10,9 @@ import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import { usePathname } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import useAuth from 'src/routes/hooks/useAuth';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
@@ -36,6 +37,14 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+
+  const router = useRouter();
+  const { logout } = useAuth();
+  const handleLogout = () => {
+    logout();
+    router.replace('/login');
+};
 
   const renderAccount = (
     <Box
@@ -88,10 +97,9 @@ export default function Nav({ openNav, onCloseNav }) {
         </Box> */}
 
         <Button
-          href="/login"
-          target="_blank"
           variant="contained"
           color="inherit"
+          onClick={handleLogout}
         >
           Logout
         </Button>

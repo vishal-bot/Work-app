@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -12,13 +13,16 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
-
+import useAuth from 'src/routes/hooks/useAuth';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -28,20 +32,57 @@ export default function LoginView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setusername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { login } = useAuth();
+  const vertical = 'top';
+  const horizontal = 'right';
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('https://dummyjson.com/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      console.log(data); // Log the response data
+      // Check if login was successful (you may need to adjust this condition based on your backend response)
+      if (response.status === 200) {
+        const accessToken = data.token;
+        console.log(accessToken);
+        login(accessToken);
+        // Perform actions after successful login, e.g., set access token in local storage
+        router.push('/');
+      } else {
+        setError(data.message);
+        setOpenSnackbar(true);
+      }
+    } catch (err) {
+      setError(err.message);
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   const renderForm = (
-    <>
+    <form onSubmit={handleLogin}>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="username" label="username" value={username}
+          onChange={(e) => setusername(e.target.value)} />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -66,11 +107,11 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+      // onClick={handleClick}
       >
         Login
       </LoadingButton>
-    </>
+    </form>
   );
 
   return (
@@ -149,6 +190,11 @@ export default function LoginView() {
           {renderForm}
         </Card>
       </Stack>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
+        <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
+          {error}
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 }
