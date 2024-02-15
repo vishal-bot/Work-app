@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useState } from 'react';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-// import Button from '@mui/material/Button';
-// import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -19,10 +16,9 @@ import Snackbar from '@mui/material/Snackbar';
 
 import { useRouter } from 'src/routes/hooks';
 import { bgGradient } from 'src/theme/css';
-import useAuth from 'src/routes/hooks/useAuth';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
-import { RouterLink } from 'src/routes/components';
+import authService from 'src/services/authService';
 
 
 
@@ -33,42 +29,41 @@ export default function LoginView() {
   const theme = useTheme();
 
   const router = useRouter();
-  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { login, isAuthenticated } = useAuth();
   const vertical = 'top';
   const horizontal = 'right';
-
-  // useEffect(() => { localStorage.removeItem('accessToken'); }, []);
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await response.json();
-      // console.log(response); // Log the response data
-      // Check if login was successful (you may need to adjust this condition based on your backend response)
-      if (response.status === 200) {
-        // Perform actions after successful login, e.g., set access token in local storage
-        login(data.token);
-        console.log(isAuthenticated)
-        router.reload();
-        router.push('/');
-        // navigate('/');
-      } else {
-        setError(data.message);
-        setOpenSnackbar(true);
-      }
+      // const response = await fetch('https://dummyjson.com/auth/login', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ username, password }),
+      // });
+      // const data = await response.json();
+      // // console.log(response); // Log the response data
+      // // Check if login was successful (you may need to adjust this condition based on your backend response)
+      // if (response.status === 200) {
+      //   // Perform actions after successful login, e.g., set access token in local storage
+      //   login(data.token);
+      //   console.log(isAuthenticated)
+      //   router.reload();
+      //   router.push('/');
+
+      //   // navigate('/');
+      // } else {
+      //   setError(data.message);
+      //   setOpenSnackbar(true);
+      // }
+      await authService.login(username, password);
+      router.push('/');
     } catch (err) {
       setError(err.message);
       setOpenSnackbar(true);
@@ -120,11 +115,6 @@ export default function LoginView() {
       </LoadingButton>
     </form>
   );
-  // if(isAuthenticated){
-  //   // router.push('/');
-  //   // return null;
-  //  return <Navigate to='/'/>
-  // }
   return (
     <Box
       sx={{

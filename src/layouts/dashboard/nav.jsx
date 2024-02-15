@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -13,7 +12,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 
 import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-import useAuth from 'src/routes/hooks/useAuth';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
@@ -22,8 +20,11 @@ import { account } from 'src/_mock/account';
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
+import authService from 'src/services/authService';
+
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
+
 
 // ----------------------------------------------------------------------
 
@@ -41,13 +42,9 @@ export default function Nav({ openNav, onCloseNav }) {
 
 
   const router = useRouter();
-  const { logout } = useAuth();
   const handleLogout = () => {
-    logout();
-    
-    router.reload();
+    authService.logout();
     router.push('/login')
-    // return <Navigate to='/login'/>
 };
 
   const renderAccount = (

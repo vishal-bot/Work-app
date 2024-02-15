@@ -5,19 +5,15 @@ import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 
 import Router from 'src/routes/sections';
 import ThemeProvider from 'src/theme';
-import useAuth from 'src/routes/hooks/useAuth';
-
+import AuthService from 'src/services/authService';
 // ----------------------------------------------------------------------
 
 export default function App() {
   useScrollToTop();
 
-  const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated);
-
   return (
     <ThemeProvider>
-      <Router/>
+      <Router authService={AuthService} />
     </ThemeProvider>
   );
 }

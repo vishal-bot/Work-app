@@ -1,8 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
-import useAuth from './hooks/useAuth';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -17,11 +16,9 @@ export const AboutPage = lazy(() => import('src/pages/about'));
 
 // ----------------------------------------------------------------------
 
-export default function Router() {
-  const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
-
-
+export default function Router({ authService }) {
+  
+  const isAuthenticated = authService.isAuthenticated();
   const routes = useRoutes([
     {
       path: 'login',
