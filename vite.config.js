@@ -26,10 +26,15 @@ export default defineConfig({
       },
     ],
   },
+  // server: {
+  //   port: 3030,
+  // },
+  // preview: {
+  //   port: 3030,
+  // },
   server: {
-    port: 3030,
-  },
-  preview: {
-    port: 3030,
+    // Set `host: true` if inside GitHub Codespaces to listen on all addresses,
+    // see https://vitejs.dev/config/server-options.html#server-host
+    host: !!process.env.CODESPACES,
   },
 });

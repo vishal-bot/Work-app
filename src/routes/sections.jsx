@@ -19,12 +19,13 @@ export const AboutPage = lazy(() => import('src/pages/about'));
 
 export default function Router() {
   const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated)
 
 
   const routes = useRoutes([
     {
       path: 'login',
-      element: <LoginPage />,
+      element: isAuthenticated ? <Navigate to="/" /> : <LoginPage />,
     },
     {
       path: '404',

@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+// import Button from '@mui/material/Button';
+// import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -21,24 +22,30 @@ import { bgGradient } from 'src/theme/css';
 import useAuth from 'src/routes/hooks/useAuth';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
+import { RouterLink } from 'src/routes/components';
 
 
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
+
   const theme = useTheme();
 
   const router = useRouter();
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const vertical = 'top';
   const horizontal = 'right';
+
+  // useEffect(() => { localStorage.removeItem('accessToken'); }, []);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -49,14 +56,15 @@ export default function LoginView() {
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
-      console.log(data); // Log the response data
+      // console.log(response); // Log the response data
       // Check if login was successful (you may need to adjust this condition based on your backend response)
       if (response.status === 200) {
-        const accessToken = data.token;
-        console.log(accessToken);
-        login(accessToken);
         // Perform actions after successful login, e.g., set access token in local storage
+        login(data.token);
+        console.log(isAuthenticated)
+        router.reload();
         router.push('/');
+        // navigate('/');
       } else {
         setError(data.message);
         setOpenSnackbar(true);
@@ -74,7 +82,7 @@ export default function LoginView() {
   const renderForm = (
     <form onSubmit={handleLogin}>
       <Stack spacing={3}>
-        <TextField name="username" label="username" value={username}
+        <TextField name="username" label="Username" value={username}
           onChange={(e) => setusername(e.target.value)} />
 
         <TextField
@@ -107,13 +115,16 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-      // onClick={handleClick}
       >
         Login
       </LoadingButton>
     </form>
   );
-
+  // if(isAuthenticated){
+  //   // router.push('/');
+  //   // return null;
+  //  return <Navigate to='/'/>
+  // }
   return (
     <Box
       sx={{
@@ -140,16 +151,11 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Work App</Typography>
+          <Typography variant="h4" sx={{ mb: 5 }}>Sign in to Work App</Typography>
 
-          <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-            Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-              Get started
-            </Link>
-          </Typography>
 
-          <Stack direction="row" spacing={2}>
+
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -179,18 +185,25 @@ export default function LoginView() {
             >
               <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
             </Button>
-          </Stack>
-
+          </Stack> */}
+          {/* 
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
 
           {renderForm}
+
+          <Typography variant="body2" sx={{ mt: 5, mb: 2 }}>
+            Don’t have an account?
+            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
+              Get started
+            </Link>
+          </Typography>
         </Card>
       </Stack>
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical, horizontal }}>
         <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
           {error}
         </MuiAlert>

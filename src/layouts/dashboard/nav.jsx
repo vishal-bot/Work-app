@@ -1,4 +1,5 @@
-import { useEffect, Navigate } from 'react';
+import { useEffect } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -43,7 +44,10 @@ export default function Nav({ openNav, onCloseNav }) {
   const { logout } = useAuth();
   const handleLogout = () => {
     logout();
-    router.replace('/login');
+    
+    router.reload();
+    router.push('/login')
+    // return <Navigate to='/login'/>
 };
 
   const renderAccount = (
