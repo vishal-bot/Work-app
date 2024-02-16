@@ -10,17 +10,16 @@ import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { account } from 'src/_mock/account';
+import authService from 'src/services/authService';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
-
-import authService from 'src/services/authService';
 
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
