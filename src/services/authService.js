@@ -1,5 +1,6 @@
+/* eslint-disable class-methods-use-this */
 class AuthService {
-  login(username, password) {
+  async login(username, password) {
     return fetch('https://dummyjson.com/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

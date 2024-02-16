@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import AuthService from 'src/services/authService';
