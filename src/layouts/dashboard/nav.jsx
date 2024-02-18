@@ -174,8 +174,14 @@ Nav.propTypes = {
 
 function NavItem({ item }) {
   const pathname = usePathname();
+// console.log(pathname);
+// console.log(item.path);
 
   const active = item.path === pathname;
+
+  // if(pathname === 'tasks/edit/:taskId' || pathname === 'tasks/:taskId') {
+  //   active = 'tasks'
+  // }
 
   return (
     <ListItemButton

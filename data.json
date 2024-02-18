@@ -1,0 +1,35 @@
+[
+    {
+      "task_id": 1,
+      "title": "Complete Project Proposal",
+      "description": "Draft a detailed project proposal for the upcoming software release.",
+      "status": "Inactive",
+      "priority": "High",
+      "assigned_to": "John Doe"
+    },
+    {
+      "task_id": 2,
+      "title": "Bug Fix: Login Page",
+      "description": "Investigate and fix the login page issue related to session management.",
+      "status": "Active",
+      "priority": "Medium",
+      "assigned_to": "Alice Smith"
+    },
+    {
+      "task_id": 3,
+      "title": "UI Redesign: Dashboard",
+      "description": "Revamp the dashboard UI to improve user experience.",
+      "status": "Active",
+      "priority": "Low",
+      "assigned_to": "Eva Brown"
+    },
+    {
+      "task_id": 4,
+      "title": "Write User Documentation",
+      "description": "Create comprehensive user documentation for the new feature set.",
+      "status": "Completed",
+      "priority": "High",
+      "assigned_to": "Michael Johnson"
+    }
+  ]
+  

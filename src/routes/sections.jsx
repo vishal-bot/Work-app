@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
+import AddTaskPage from 'src/sections/tasks/add-task';
+import TaskMainPage from 'src/sections/tasks/tasks-page';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -11,6 +13,8 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const TeamPage = lazy(() => import('src/pages/team'));
 export const TasksPage = lazy(() => import('src/pages/tasks'));
+export const EditTaskPage = lazy(() => import('src/sections/tasks/edit-task-page'));
+export const TaskDetailPage = lazy(() => import('src/sections/tasks/task-details-page'));
 export const ProjectsPage = lazy(() => import('src/pages/projects'));
 export const AboutPage = lazy(() => import('src/pages/about'));
 
@@ -48,7 +52,16 @@ export default function Router({ authService }) {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'team', element: <TeamPage /> },
-        { path: 'tasks', element: <TasksPage /> },
+        { 
+          path: 'tasks',
+          element: <TasksPage />,
+          children: [
+            { path: '', element: <TaskMainPage /> },
+            { path: 'addTask', element: <AddTaskPage /> },
+            { path: ':taskId', element: <TaskDetailPage /> },
+            { path: 'edit/:taskId', element: <EditTaskPage /> },
+          ]
+        },
         { path: 'projects', element: <ProjectsPage /> },
         { path: 'about', element: <AboutPage /> },
         { path: 'blog', element: <BlogPage /> },
