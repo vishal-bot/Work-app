@@ -19,11 +19,13 @@
 
 // export default TaskDetailPage;
 
-import { useEffect, useState } from 'react';
+import {  useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, TextField, Button, Box, Divider, List, ListItem, ListItemText, Link } from '@mui/material';
+
+import { Box, List, Button, Divider, ListItem, TextField, Typography, ListItemText } from '@mui/material';
 // import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { RouterLink } from 'src/routes/components';
+
+// import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
 
 // Sample task data (replace with actual task data from your API)
@@ -36,12 +38,12 @@ const sampleTaskData = {
   assigned_to: 'John Doe', // Team member's name
 };
 
-// Sample team member data (replace with actual team member data from your API)
-const sampleTeamMemberData = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Smith' },
-  // Add more team members as needed
-];
+// // Sample team member data (replace with actual team member data from your API)
+// const sampleTeamMemberData = [
+//   { id: 1, name: 'John Doe' },
+//   { id: 2, name: 'Jane Smith' },
+//   // Add more team members as needed
+// ];
 
 export default function TaskDetailPage() {
   const { taskId } = useParams();
@@ -113,11 +115,11 @@ export default function TaskDetailPage() {
 
           <Typography variant="h6">Comments</Typography>
           <List>
-            {comments.map((comment, index) => (
+            {comments.map((updates, index) => (
               <ListItem key={index}>
                 <ListItemText
-                  primary={comment.text}
-                  secondary={`${comment.author} - ${comment.date.toLocaleString()}`}
+                  primary={updates.text}
+                  secondary={`${updates.author} - ${updates.date.toLocaleString()}`}
                 />
               </ListItem>
             ))}

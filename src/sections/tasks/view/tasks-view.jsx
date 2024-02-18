@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+// import React from 'react';
+import { Outlet } from "react-router-dom"
 
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import TaskMainPage from '../tasks-page';
-import { Outlet } from "react-router-dom"
+// import TaskMainPage from '../tasks-page';
 // ----------------------------------------------------------------------
 
 export default function TasksView() {

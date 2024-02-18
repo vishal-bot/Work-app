@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Modal, Button } from '@mui/material';
 
-const TaskDeleteModal = ({ open, onConfirm, onCancel }) => {
-  return (
+const TaskDeleteModal = ({ open, onConfirm, onCancel }) => 
+   (
     <Modal open={open} onClose={onCancel}>
       <div>
         <h2>Confirm Delete</h2>
@@ -12,6 +14,11 @@ const TaskDeleteModal = ({ open, onConfirm, onCancel }) => {
       </div>
     </Modal>
   );
-};
 
 export default TaskDeleteModal;
+
+TaskDeleteModal.propTypes = {
+  open: PropTypes.bool,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+};

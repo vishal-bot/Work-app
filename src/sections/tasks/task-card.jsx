@@ -1,8 +1,10 @@
 import React from 'react';
-import { Card, CardContent, Typography, Button } from '@mui/material';
+import PropTypes from "prop-types";
 
-const TaskCard = ({ task, onClick, onEdit, onDelete }) => {
-  return (
+import { Card, Button, Typography, CardContent } from '@mui/material';
+
+const TaskCard = ({ task, onClick, onEdit, onDelete }) =>
+   (
     <Card >
       <CardContent>
         <Typography onClick={onClick} sx={{cursor: 'pointer'}} variant="h5" component="div">
@@ -14,6 +16,12 @@ const TaskCard = ({ task, onClick, onEdit, onDelete }) => {
       </CardContent>
     </Card>
   );
-};
 
 export default TaskCard;
+
+TaskCard.propTypes = {
+  task: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+}

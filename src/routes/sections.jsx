@@ -2,8 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
-import AddTaskPage from 'src/sections/tasks/add-task';
-import TaskMainPage from 'src/sections/tasks/tasks-page';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -13,6 +11,8 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const TeamPage = lazy(() => import('src/pages/team'));
 export const TasksPage = lazy(() => import('src/pages/tasks'));
+export const TaskMainPage = lazy(() => import('src/sections/tasks/tasks-page'));
+export const AddTaskPage = lazy(() => import('src/sections/tasks/add-task'));
 export const EditTaskPage = lazy(() => import('src/sections/tasks/edit-task-page'));
 export const TaskDetailPage = lazy(() => import('src/sections/tasks/task-details-page'));
 export const ProjectsPage = lazy(() => import('src/pages/projects'));

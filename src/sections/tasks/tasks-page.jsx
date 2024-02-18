@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+
+import Stack from '@mui/material/Stack';
+import { Grid, Select, Button, Divider, MenuItem, TextField, InputLabel, IconButton, FormControl } from '@mui/material';
+
+import { useRouter } from 'src/routes/hooks';
+
 import TaskCard from './task-card';
 // import TaskService from './services/TaskService'; // Assuming you have a service to handle API calls
 import TaskDeleteModal from './task-delete';
-import Stack from '@mui/material/Stack';
-import { FormControl, InputLabel, Select, MenuItem, Grid, TextField, IconButton, Divider } from '@mui/material';
-import { useRouter } from 'src/routes/hooks';
 
 // import { GridOn, List } from '@mui/icons-material';
 
@@ -32,7 +35,8 @@ const TaskMainPage = () => {
         task.title.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     }
-  }, [searchQuery, tasks]);
+  });
+  // }, [searchQuery, tasks]);
 
   useEffect(() => {
     if (filterStatus === '') {
@@ -75,7 +79,6 @@ const TaskMainPage = () => {
   };
 
   const handleEditTask = (taskId) => {
-    console
     router.push(`/tasks/edit/${taskId}`);
   };
 
@@ -87,6 +90,7 @@ const TaskMainPage = () => {
   const handleConfirmDelete = async () => {
     try {
       // await TaskService.deleteTask(selectedTask);
+      console.log(selectedTask);
       setShowDeleteModal(false);
       fetchTasks(); // Refresh tasks after deletion
     } catch (error) {
@@ -117,7 +121,7 @@ const TaskMainPage = () => {
 
   return (
     <Stack>
-      <button onClick={handleAddTask}>Add</button>
+      <Button onClick={handleAddTask}>Add</Button>
       <Stack direction='row' spacing={3} justifyContent="flex-start"
         alignItems="flex-start" sx={{ mb: 2 }}>
         <TextField
