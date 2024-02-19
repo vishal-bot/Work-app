@@ -171,16 +171,19 @@ const TaskMainPage = () => {
             ))}
           </Grid>
         ) : (
-          filteredTasks.map((task) => (
+          <Grid container spacing={2}>
+          {filteredTasks.map((task) => (
+            <Grid item key={task.id} xs={12} sm={12} md={12}>
             <TaskCard
-              key={task.id}
               task={task}
               onClick={() => handleCardClick(task.id)}
               onEdit={() => handleEditTask(task.id)}
               onDelete={() => handleDeleteTask(task.id)}
             />
-          ))
-        )}
+            </Grid>
+          ))}
+          </Grid>
+          )}
 
 
         {/* <Grid container spacing={3}>

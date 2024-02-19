@@ -10,7 +10,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { account } from 'src/_mock/account';
-
+import authService from 'src/services/authService';
+import { useRouter } from 'src/routes/hooks';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -21,17 +22,15 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
+  }
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  
+  const router = useRouter();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -40,6 +39,29 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  // const handleMenuOption = (label) => {
+  //   // if (label === 'Home') {
+  //   //   router.push('/');
+  //   // } else if (label === 'Profile') {
+  //   //   router.push('/profile');
+  //   // }
+  //   console.log(label);
+  // };
+
+  const handleHome = () => {
+    setOpen(null);
+    router.push('/');
+  }
+
+  const handleProfile = () => {
+    router.push('/profile');
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    router.push('/login')
+};
 
   return (
     <>
@@ -94,18 +116,20 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
+        {/* {MENU_OPTIONS.map((option) => (
+          <MenuItem key={option.label} onClick={handleMenuOption(option.label)}>
             {option.label}
           </MenuItem>
-        ))}
+        ))} */}
+        <MenuItem onClick={handleHome}>Home</MenuItem>
+        <MenuItem onClick={handleProfile}>Profile</MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
