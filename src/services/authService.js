@@ -12,12 +12,12 @@ class AuthService {
     const data = await res.json();
     // Mock token handling (replace with your actual token handling logic)
     const {token} = data;
-    localStorage.setItem('token', token); // Store token in localStorage
+    sessionStorage.setItem('token', token); // Store token in localStorage
     return data;
   }
 
   logout() {
-    localStorage.removeItem('token'); // Remove token from localStorage
+    sessionStorage.removeItem('token'); // Remove token from localStorage
   }
 
   isAuthenticated() {

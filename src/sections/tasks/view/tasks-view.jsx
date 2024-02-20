@@ -1,39 +1,34 @@
 // import React from 'react';
 import { Outlet } from "react-router-dom"
 
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+
+import { useRouter } from 'src/routes/hooks';
+
+import Iconify from 'src/components/iconify';
 
 // import TaskMainPage from '../tasks-page';
 // ----------------------------------------------------------------------
 
 export default function TasksView() {
-  // const [tasks, setTasks] = useState([]);
 
-  // const getData = async () => {
-  //   await fetch('data.json', {
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json'
-  //     }
-  //   })
-  //     .then(response => response.json())
-  //     .then(myJson => {
-  //       console.log(myJson); // Verify that data is fetched correctly
-  //       setTasks(myJson); // Set the fetched data to the state
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getData(); // Fetch data when the component mounts
-  // }, []);
-
+  const router = useRouter();
+  const handleAddTask = () => {
+    router.push('/tasks/addTask');
+  }
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Tasks
-      </Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h4">Tasks</Typography>
+
+        <Button variant="contained" color="inherit" onClick={handleAddTask} startIcon={<Iconify icon="eva:plus-fill" />}>
+          Add Task
+        </Button>
+      </Stack>
       {/* <TaskList tasks={tasks} setTasks={setTasks} /> */}
       <Outlet />
       {/* <TaskMainPage /> */}

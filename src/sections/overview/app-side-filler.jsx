@@ -2,17 +2,15 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
-import { useMediaQuery } from '@mui/material';
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { useResponsive } from 'src/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
 
 export default function AppSideFiller({ title, icon, subheader, ...other }) {
-    const isXsScreen = useMediaQuery((theme) => theme.breakpoints.down('xs'));
+    // const isXsScreen = useMediaQuery((theme) => theme.breakpoints.down('xs'));
+    const upXs = useResponsive('up', 'sm', 'xs');
     return (
         <Card {...other}>
             <CardHeader title={title} subheader={subheader} />
@@ -27,7 +25,7 @@ export default function AppSideFiller({ title, icon, subheader, ...other }) {
             >
 
                 <Box sx={{ mb: 0.5 }}>
-                    {icon && <Box sx={{ transform: isXsScreen ? 'rotate(90deg)' : 'none', }}>{icon}</Box>}
+                    {icon && <Box sx={{ transform: !upXs ? 'rotate(90deg)' : 'none', }}>{icon}</Box>}
                 </Box>
                 {/* <Typography variant="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. reprehenderit qui officiis facilis quis laborum natus dolore?</Typography> */}
 

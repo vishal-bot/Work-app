@@ -1,10 +1,7 @@
 import { faker } from '@faker-js/faker';
-
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
-import { Button, Card, CardContent } from '@mui/material';
-
+// import { Button, Card, CardContent } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -13,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import Iconify from 'src/components/iconify';
 
-import AppTasks from '../app-tasks';
+// import AppTasks from '../app-tasks';
 // import AppNewsUpdate from '../app-news-update';
 import AppTasksUpdate from '../app-tasks-update';
 import AppOrderTimeline from '../app-order-timeline';
@@ -35,9 +32,16 @@ export default function AppView() {
     completed: 8,
     total: 15,
   });
+  const [projectStatistics, setProjectStatistics] = useState({
+    active: 5,
+    inactive: 2,
+    completed: 8,
+    total: 15,
+  });
 
   const [newTasks, setNewTasks] = useState([]);
   const [newProjects, setNewProjects] = useState([]);
+
 
   useEffect(() => {
     fetchTasks();
@@ -45,12 +49,13 @@ export default function AppView() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('data.json', {
+      const response = await fetch('https://work-app-backend.onrender.com/tasks', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         }
       })
+      // console.log(response);
       const data = await response.json();
       setNewTasks(data);
     } catch (error) {
@@ -58,17 +63,105 @@ export default function AppView() {
     }
   };
 
-  // Fetch task statistics and new tasks/projects data from the backend
   useEffect(() => {
-    // Fetch task statistics data from the backend
-    // Update taskStatistics state with the fetched data
+    const taskStats = () => {
+      const stats = {
+        active: newTasks.filter((object) => object.status === 'Active').length,
+        inactive: newTasks.filter((object) => object.status === 'InActive').length,
+        completed: newTasks.filter((object) => object.status === 'Completed').length,
+        total: newTasks.length,
+      }
+      setTaskStatistics(stats);
+    }
+    taskStats();
+  }, [newTasks]);
 
-    // Fetch new tasks data from the backend
-    // Update newTasks state with the fetched data
 
-    // Fetch new projects data from the backend
-    // Update newProjects state with the fetched data
-  }, []);
+  // useEffect(() => {
+  //   const stats = {
+  //     active: newProjects.filter((object) => object.status === 'Active').length,
+  //     inactive: newProjects.filter((object) => object.status === 'InActive').length,
+  //     completed: newProjects.filter((object) => object.status === 'Completed').length,
+  //     total: newProjects.length,
+  //   }
+  //   setProjectStatistics(stats);
+  // }, [newProjects]);
+
+  useEffect(() => {
+    fetchProjects();
+  })
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('https://work-app-backend.onrender.com/projects', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+      const data = await response.json();
+      setNewProjects(data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+  // Fetch task statistics and new tasks/projects data from the backend
+  // useEffect(() => {
+
+  //   // Fetch task statistics data from the backend
+  //   // Update taskStatistics state with the fetched data
+
+  //   // Fetch new tasks data from the backend
+  //   // Update newTasks state with the fetched data
+  //   const fetchTasks = async () => {
+  //     try {
+  //       const response = await fetch('https://work-app-backend.onrender.com/tasks', {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Accept': 'application/json'
+  //         }
+  //       })
+  //       console.log(response);
+  //       const data = await response.json();
+  //       setNewTasks(data);
+  //       const stats = {
+  //         active: newTasks.filter((object) => object.status === 'Active').length,
+  //         inactive: newTasks.filter((object) => object.status === 'InActive').length,
+  //         completed: newTasks.filter((object) => object.status === 'Completed').length,
+  //         total: newTasks.length,
+  //       }
+  //       setTaskStatistics(stats);
+  //     } catch (error) {
+  //       console.error('Error fetching tasks:', error);
+  //     }
+  //   }
+
+  //   fetchTasks();
+  //   // Fetch new projects data from the backend
+  //   // Update newProjects state with the fetched data
+  //   const fetchProjects = async () => {
+  //     try {
+  //       const response = await fetch('https://work-app-backend.onrender.com/projects', {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Accept': 'application/json'
+  //         }
+  //       })
+  //       const data = await response.json();
+  //       setNewProjects(data);
+  //       const stats = {
+  //         active: newProjects.filter((object) => object.status === 'Active').length,
+  //         inactive: newProjects.filter((object) => object.status === 'InActive').length,
+  //         completed: newProjects.filter((object) => object.status === 'Completed').length,
+  //         total: newProjects.length,
+  //       }
+  //       setProjectStatistics(stats);
+  //     } catch (error) {
+  //       console.error('Error fetching projects:', error);
+  //     }
+  //   };
+  //   fetchProjects();
+  // }, [newTasks, newProjects]);
 
   return (
     <Container maxWidth="xl">
@@ -138,10 +231,10 @@ export default function AppView() {
       </Box> */}
 
       <Grid container py={1} spacing={3} sx={{
-          '--Grid-borderWidth': '1px',
-          border: 'var(--Grid-borderWidth) dashed',
-          borderColor: 'divider',
-        }}>
+        '--Grid-borderWidth': '1px',
+        border: 'var(--Grid-borderWidth) dashed',
+        borderColor: 'divider',
+      }}>
         {/* First Grid Container */}
         <Grid xs={12} sm={8} md={8} lg={8}>
           <Box>
@@ -256,10 +349,10 @@ export default function AppView() {
       </Grid> */}
 
       <Grid container py={1} spacing={3} sx={{
-          '--Grid-borderWidth': '1px',
-          border: 'var(--Grid-borderWidth) dashed',
-          borderColor: 'divider',
-        }}>
+        '--Grid-borderWidth': '1px',
+        border: 'var(--Grid-borderWidth) dashed',
+        borderColor: 'divider',
+      }}>
         {/* Second Grid Container */}
         <Grid xs={12} sm={4} md={4} lg={4}>
           <Box>
@@ -278,7 +371,7 @@ export default function AppView() {
               <Grid xs={12} sm={6} md={6}>
                 <AppWidgetSummary
                   title="Active Projects"
-                  total={8}
+                  total={projectStatistics.active}
                   color="success"
                   icon={<img alt="icon" src="/assets/icons/glass/project-active.png" />}
                 />
@@ -287,7 +380,7 @@ export default function AppView() {
               <Grid xs={12} sm={6} md={6}>
                 <AppWidgetSummary
                   title="InActive Projects"
-                  total={2}
+                  total={projectStatistics.inactive}
                   color="info"
                   icon={<img alt="icon" src="/assets/icons/glass/project-inactive.png" />}
                 />
@@ -296,7 +389,7 @@ export default function AppView() {
               <Grid xs={12} sm={6} md={6}>
                 <AppWidgetSummary
                   title="Completed Projects"
-                  total={20}
+                  total={projectStatistics.completed}
                   color="warning"
                   icon={<img alt="icon" src="/assets/icons/glass/project-completed.png" />}
                 />
@@ -305,7 +398,7 @@ export default function AppView() {
               <Grid xs={12} sm={6} md={6}>
                 <AppWidgetSummary
                   title="Total Projects"
-                  total={234}
+                  total={projectStatistics.total}
                   color="error"
                   icon={<img alt="icon" src="/assets/icons/glass/project-active.png" />}
                 />
@@ -452,7 +545,7 @@ export default function AppView() {
           <Grid xs={12} md={6} lg={8}>
             <AppTasksUpdate
               title="Newly Added Tasks"
-              list={newTasks.map((newTask, index) => ({
+              list={newTasks.slice(0,4).map((newTask, index) => ({
                 id: newTask.id,
                 title: newTask.title,
                 description: newTask.description,
@@ -524,10 +617,10 @@ export default function AppView() {
           <Grid xs={12} md={6} lg={8}>
             <AppTasksUpdate
               title="Newly Added Projects"
-              list={newTasks.map((newTask, index) => ({
-                id: newTask.id,
-                title: newTask.title,
-                description: newTask.description,
+              list={newProjects.map((newProject, index) => ({
+                id: newProject.id,
+                title: newProject.title,
+                description: newProject.description,
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
               }))}
@@ -536,48 +629,6 @@ export default function AppView() {
         </Grid>
       </Stack>
 
-      <Stack container spacing="10">
-        <Typography variant="h4" gutterBottom style={{ marginTop: '20px' }}>
-          Projects
-        </Typography>
-        {/* Projects Grid */}
-        <Grid container spacing={3}>
-          {/* Map over newProjects array to display each project */}
-          {newProjects.map((project) => (
-            <Grid item xs={4} key={project.id}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h2">
-                    {project.title}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
-        <Typography variant="h4" gutterBottom style={{ marginTop: '20px' }}>
-          Newly Added Tasks
-        </Typography>
-        {/* Newly Added Tasks Grid */}
-        <Grid container spacing={3}>
-          {/* Map over newTasks array to display each task */}
-          {newTasks.map((task) => (
-            <Grid item xs={4} key={task.id}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h2">
-                    {task.title}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-          <Button component={Link} to="/tasks" variant="contained" style={{ marginTop: '20px' }}>
-            Show All Tasks
-          </Button>
-        </Grid>
-      </Stack>
     </Container >
   );
 }
