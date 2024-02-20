@@ -21,7 +21,7 @@ class AuthService {
   }
 
   isAuthenticated() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     return !!token; // Return true if token exists, false otherwise
   }
 }
