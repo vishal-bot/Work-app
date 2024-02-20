@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box, Select, Button, MenuItem, TextField, Typography, InputLabel, FormControl, Autocomplete } from '@mui/material';
 
+import { useRouter } from 'src/routes/hooks';
 // Sample task data (replace with actual task data from your API)
 const sampleTaskData = {
   task_id: 1,
@@ -31,7 +32,7 @@ const sampleTaskData = {
   description: 'Draft a detailed project proposal for the upcoming software release.',
   status: 'In Progress',
   priority: 'High',
-  assigned_to: [{name: 'John Doe'}], // List of assigned team members
+  assigned_to: [{ name: 'John Doe' }], // List of assigned team members
 };
 
 // Sample team member data (replace with actual team member data from your API)
@@ -42,42 +43,76 @@ const sampleTeamMemberData = [
 ];
 
 export default function EditTaskPage() {
+  const router = useRouter();
   const { taskId } = useParams();
-  const [task, setTask] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
-  const [assignedTo, setAssignedTo] = useState([]);
+  const [task, setTask] = useState({});
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    status: '',
+    priority: '',
+    assigned_to: '',
+  });
 
   useEffect(() => {
-    // Fetch task details based on taskId (replace with actual API call)
-    setTask(sampleTaskData);
+    // Fetch task data based on taskId
+    const fetchTask = async () => {
+      try {
+        const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${taskId}`);
+        const data = await response.json();
+        setTask(data[0]);
+      } catch (error) {
+        console.error('Error fetching task:', error);
+      }
+    };
+    fetchTask();
+  },[taskId]);
 
-    // Fetch team member details (replace with actual API call)
-    setTeamMembers(sampleTeamMemberData);
+ 
 
-    if(task) {setAssignedTo(task.assigned_to)}
-  }, [taskId, task]);
-  
+  useEffect(() => {
+    const fillFormData = () => {
+      const data = task;
+      setFormData({
+        title: data.title,
+        description: data.description,
+        status: data.status,
+        priority: data.priority,
+        assigned_to: data.assigned_to,
+      });
+    }
+    fillFormData();
+  },[task]);
 
-  const handleChangeTitle = (event) => {
-    setTask((prevTask) => ({ ...prevTask, title: event.target.value }));
+
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleChangeDescription = (event) => {
-    setTask((prevTask) => ({ ...prevTask, description: event.target.value }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        // Task updated successfully, navigate to task details page
+        // You can use useHistory() to navigate or any other navigation method
+        router.push('/tasks');
+      } else {
+        console.error('Failed to update task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
   };
 
-  const handleChangeStatus = (event) => {
-    setTask((prevTask) => ({ ...prevTask, status: event.target.value }));
-  };
-
-  const handleChangePriority = (event) => {
-    setTask((prevTask) => ({ ...prevTask, priority: event.target.value }));
-  };
-
-  const handleAssignTask = () => {
-    // Logic to assign task to selected team members (replace with actual API call)
-    console.log('Assigned to:', assignedTo);
-  };
 
   return (
     <Box>
@@ -87,7 +122,7 @@ export default function EditTaskPage() {
           <TextField
             fullWidth
             value={task.title}
-            onChange={handleChangeTitle}
+            onChange={handleChange}
             label="Title"
             variant="outlined"
             margin="normal"
@@ -97,21 +132,22 @@ export default function EditTaskPage() {
             multiline
             rows={4}
             value={task.description}
-            onChange={handleChangeDescription}
+            onChange={handleChange}
             label="Description"
             variant="outlined"
             margin="normal"
           />
           <FormControl fullWidth margin="normal" variant="outlined">
             <InputLabel>Status</InputLabel>
-            <Select value={task.status} onChange={handleChangeStatus}>
-              <MenuItem value="In Progress">In Progress</MenuItem>
+            <Select value={task.status} onChange={handleChange}>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="InActive">InActive</MenuItem>
               <MenuItem value="Completed">Completed</MenuItem>
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" variant="outlined">
             <InputLabel>Priority</InputLabel>
-            <Select value={task.priority} onChange={handleChangePriority}>
+            <Select value={task.priority} onChange={handleChange}>
               <MenuItem value="Low">Low</MenuItem>
               <MenuItem value="Medium">Medium</MenuItem>
               <MenuItem value="High">High</MenuItem>
@@ -123,14 +159,14 @@ export default function EditTaskPage() {
             options={teamMembers}
             getOptionLabel={(option) => option.name}
             // isOptionEqualToValue={(option) => option.value}
-            value={assignedTo}
+            value={formData.assigned_to_teamigned_to}
             onChange={(event, newValue) => {
-              setAssignedTo(newValue);
+              setFormData(newValue);
             }}
             renderInput={(params) => <TextField {...params} label="Assigned To" variant="outlined" />}
           />
 
-          <Button onClick={handleAssignTask} variant="contained" color="primary">
+          <Button onClick={handleSubmit} variant="contained" color="primary">
             Assign Task
           </Button>
         </Box>

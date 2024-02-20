@@ -69,7 +69,7 @@ const TaskMainPage = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/tasks', {
+      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -248,9 +248,9 @@ const TaskMainPage = () => {
               <Grid item key={task.id} xs={12} sm={6} md={4}>
                 <TaskCard
                   task={task}
-                  onClick={() => handleCardClick(task.id)}
-                  onEdit={() => handleEditTask(task.id)}
-                  onDelete={() => handleDeleteTask(task.id)}
+                  onClick={() => handleCardClick(task.task_id)}
+                  onEdit={() => handleEditTask(task.task_id)}
+                  onDelete={() => handleDeleteTask(task.task_id)}
                 />
               </Grid>
             ))}

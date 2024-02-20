@@ -49,7 +49,7 @@ export default function AppView() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/tasks', {
+      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -89,7 +89,7 @@ export default function AppView() {
 
   useEffect(() => {
     fetchProjects();
-  })
+  },[]);
 
   const fetchProjects = async () => {
     try {
