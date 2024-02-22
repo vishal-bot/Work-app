@@ -9,21 +9,22 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { account } from 'src/_mock/account';
 import authService from 'src/services/authService';
-import { useRouter } from 'src/routes/hooks';
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  }
-];
+// const MENU_OPTIONS = [
+//   {
+//     label: 'Home',
+//     icon: 'eva:home-fill',
+//   },
+//   {
+//     label: 'Profile',
+//     icon: 'eva:person-fill',
+//   }
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -79,14 +80,14 @@ export default function AccountPopover() {
       >
         <Avatar
           src={account.photoURL}
-          alt={account.displayName}
+          alt={sessionStorage.getItem('name')}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {sessionStorage.getItem('name').charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -107,10 +108,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {sessionStorage.getItem('name')}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {sessionStorage.getItem('email')}
           </Typography>
         </Box>
 

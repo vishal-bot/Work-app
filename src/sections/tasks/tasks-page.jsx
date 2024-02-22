@@ -5,16 +5,20 @@ import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import TablePagination from '@mui/material/TablePagination';
 import { Grid, Card, Divider, Container, IconButton } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import Iconify from 'src/components/iconify';
 
+import NoData from './no-data';
 import TaskCard from './task-card';
+import TaskSort from './task-sort';
 import TaskFilters from './task-filters';
 // import TaskService from './services/TaskService'; // Assuming you have a service to handle API calls
 import TaskDeleteModal from './task-delete';
+
 
 
 // import { GridOn, List } from '@mui/icons-material';
@@ -31,6 +35,10 @@ const TaskMainPage = () => {
   const [filterStatus, setFilterStatus] = useState('');
 
   const [openFilter, setOpenFilter] = useState(false);
+
+  const [page, setPage] = useState(0);
+
+  const [rowsPerPage, setRowsPerPage] = useState(6);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -61,7 +69,8 @@ const TaskMainPage = () => {
         task.title.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     }
-  // });
+    setPage(0);
+    // });
   }, [filterStatus, searchQuery, tasks]);
 
   useEffect(() => {
@@ -72,6 +81,7 @@ const TaskMainPage = () => {
         task.status === filterStatus
       ));
     }
+    setPage(0);
   }, [filterStatus, tasks]);
 
 
@@ -160,6 +170,16 @@ const TaskMainPage = () => {
     setSearchQuery(event.target.value);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  const notFound = !filteredTasks.length;
   return (
     <Container>
       <Card>
@@ -191,7 +211,7 @@ const TaskMainPage = () => {
             justifyContent="flex-end"
             spacing={2}
           >
-            <Stack direction='row' sx={{ display: {xs: 'none', sm: 'block'}}}>
+            <Stack direction='row' sx={{ display: { xs: 'none', sm: 'block' } }}>
               <IconButton onClick={() => handleViewChange('grid')}>
                 {/* <GridOn /> */} Grid
               </IconButton>
@@ -199,8 +219,7 @@ const TaskMainPage = () => {
                 {/* <List /> */} List
               </IconButton>
             </Stack>
-
-            <Stack direction="row" flexShrink={0} sx={{ my: 1 }}>
+            <Stack direction="row" flexShrink={0} sx={{ my: 1 }} spacing={1}>
               <TaskFilters
                 openFilter={openFilter}
                 onOpenFilter={handleOpenFilter}
@@ -208,6 +227,7 @@ const TaskMainPage = () => {
                 filterStatus={filterStatus}
                 handleFilterChange={handleFilterChange}
               />
+              <TaskSort />
             </Stack>
           </Stack>
         </Toolbar>
@@ -219,7 +239,7 @@ const TaskMainPage = () => {
         {/* Task cards */}
         {view === 'grid' ? (
           <Grid container spacing={2}>
-            {filteredTasks.map((task) => (
+            {filteredTasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
               <Grid item key={task.task_id} xs={12} sm={6} md={4}>
                 <TaskCard
                   task={task}
@@ -232,7 +252,7 @@ const TaskMainPage = () => {
           </Grid>
         ) : (
           <Grid container spacing={2}>
-            {filteredTasks.map((task) => (
+            {filteredTasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
               <Grid item key={task.id} xs={12} sm={12} md={12}>
                 <TaskCard
                   task={task}
@@ -244,6 +264,16 @@ const TaskMainPage = () => {
             ))}
           </Grid>
         )}
+        {notFound && <NoData query={searchQuery} />}
+        <Card sx={{my:2}}><TablePagination
+          page={page}
+          component="div"
+          count={filteredTasks.length}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[6, 12, 24]}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        /></Card>
 
         <TaskDeleteModal
           open={showDeleteModal}

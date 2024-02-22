@@ -88,24 +88,24 @@ export default function AppView() {
   //   setProjectStatistics(stats);
   // }, [newProjects]);
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  // useEffect(() => {
+  //   fetchProjects();
+  // }, []);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await fetch('https://work-app-backend.onrender.com/projects', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-      const data = await response.json();
-      setNewProjects(data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
-  };
+  // const fetchProjects = async () => {
+  //   try {
+  //     const response = await fetch('https://work-app-backend.onrender.com/projects', {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       }
+  //     })
+  //     const data = await response.json();
+  //     setNewProjects(data);
+  //   } catch (error) {
+  //     console.error('Error fetching projects:', error);
+  //   }
+  // };
   // Fetch task statistics and new tasks/projects data from the backend
   // useEffect(() => {
 

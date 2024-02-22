@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { sample } from 'lodash';
-import { faker } from '@faker-js/faker';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -58,7 +56,6 @@ export default function TeamPage() {
       }
     };
     fetchTeamMembers();
-    // setTeamMembers(sampleTeamMemberData);
   }, []);
 
   const users = team.map((user, index) => ({
@@ -66,9 +63,9 @@ export default function TeamPage() {
     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
     name: user.name,
     company: user.company,
-    // isVerified: faker.datatype.boolean(),
     status: user.status,
     role: user.role,
+    number: user.number,
   }));
 
   const handleSort = (event, id) => {
@@ -81,7 +78,7 @@ export default function TeamPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = dataFiltered.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -151,7 +148,7 @@ export default function TeamPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={dataFiltered.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -161,6 +158,7 @@ export default function TeamPage() {
                   { id: 'role', label: 'Role' },
                   // { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
+                  { id: 'number', label: 'Number' },
                   { id: '' },
                 ]}
               />
@@ -170,6 +168,7 @@ export default function TeamPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
+                      number={row.number}
                       name={row.name}
                       role={row.role}
                       status={row.status}
@@ -195,7 +194,7 @@ export default function TeamPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={dataFiltered.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

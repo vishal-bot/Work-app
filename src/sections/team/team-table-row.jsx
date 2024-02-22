@@ -17,6 +17,7 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
+  number,
   selected,
   name,
   avatarUrl,
@@ -62,6 +63,8 @@ export default function UserTableRow({
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
+        <TableCell>{number}</TableCell>
+
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -102,4 +105,5 @@ UserTableRow.propTypes = {
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
+  number: PropTypes.number,
 };
