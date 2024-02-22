@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { sample } from 'lodash';
+import { faker } from '@faker-js/faker';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+// import { users } from 'src/_mock/user';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -24,7 +26,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function TeamPage() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -36,6 +38,38 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [team, setTeam] = useState([]);
+
+  useEffect(() => {
+    // Fetch task data based on taskId
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await fetch('https://work-app-backend.onrender.com/api/team', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        const data = await response.json();
+        setTeam(data);
+      } catch (error) {
+        console.error('Error fetching task:', error);
+      }
+    };
+    fetchTeamMembers();
+    // setTeamMembers(sampleTeamMemberData);
+  }, []);
+
+  const users = team.map((user, index) => ({
+    id: user.member_id,
+    avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
+    name: user.name,
+    company: user.company,
+    // isVerified: faker.datatype.boolean(),
+    status: user.status,
+    role: user.role,
+  }));
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';

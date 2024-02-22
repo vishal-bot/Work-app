@@ -1,22 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Box, Select, Button, MenuItem, TextField, Typography, InputLabel, FormControl, } from '@mui/material';
+import { Box, Select, Button, MenuItem, TextField, Typography, InputLabel, FormControl, Autocomplete, } from '@mui/material';
 
-// Sample team member data (replace with actual team member data from your API)
-const sampleTeamMemberData = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Smith' },
-  // Add more team members as needed
-];
+import { useRouter } from 'src/routes/hooks';
 
 export default function AddTaskPage() {
+  const router = useRouter();
+  const [teamMembers, setTeamMembers] = useState([]);
   const [task, setTask] = useState({
     title: '',
     description: '',
     status: '',
     priority: '',
-    assignedTo: [],
+    assigned_to: '',
   });
+
+  useEffect(() => {
+    // Fetch task data based on taskId
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await fetch('https://work-app-backend.onrender.com/api/team', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        const data = await response.json();
+        setTeamMembers(data);
+      } catch (error) {
+        console.error('Error fetching task:', error);
+      }
+    };
+    fetchTeamMembers();
+    // setTeamMembers(sampleTeamMemberData);
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -26,83 +43,105 @@ export default function AddTaskPage() {
     }));
   };
 
-  const handleAssignToChange = (event) => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      assignedTo: event.target.value,
-    }));
+  // const handleAssignToChange = (event) => {
+  //   setTask((prevTask) => ({
+  //     ...prevTask,
+  //     assignedTo: event.target.value,
+  //   }));
+  // };
+  const handleAssignToChange = (e, values) => {
+    const selectedIds = values.map(value => value.member_id);
+    setTask({ ...task, assigned_to: selectedIds?.toString() });
+    // console.log(formData)
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = async (e) => {
     // Logic to add the task (replace with actual API call)
-    console.log('New Task:', task);
-    // Reset the form after adding the task
-    setTask({
-      title: '',
-      description: '',
-      status: '',
-      priority: '',
-      assignedTo: [],
-    });
+
+    e.preventDefault();
+    try {
+      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+      if (response.ok) {
+        // Task added successfully, navigate to tasks page
+        // Reset the form after adding the task
+        console.log('New Task:', task);
+        setTask({
+          title: '',
+          description: '',
+          status: '',
+          priority: '',
+          assigned_to: '',
+        });
+        router.push('/tasks');
+      } else {
+        console.error('Failed to add task');
+      }
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+
   };
 
   return (
     <Box>
       <Typography variant="h4">Add New Task</Typography>
-      <TextField
-        fullWidth
-        name="title"
-        value={task.title}
-        onChange={handleChange}
-        label="Title"
-        variant="outlined"
-        margin="normal"
-      />
-      <TextField
-        fullWidth
-        multiline
-        rows={4}
-        name="description"
-        value={task.description}
-        onChange={handleChange}
-        label="Description"
-        variant="outlined"
-        margin="normal"
-      />
-      <FormControl fullWidth margin="normal" variant="outlined">
-        <InputLabel>Status</InputLabel>
-        <Select name="status" value={task.status} onChange={handleChange}>
-          <MenuItem value="In Progress">In Progress</MenuItem>
-          <MenuItem value="Completed">Completed</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth margin="normal" variant="outlined">
-        <InputLabel>Priority</InputLabel>
-        <Select name="priority" value={task.priority} onChange={handleChange}>
-          <MenuItem value="Low">Low</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="High">High</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth margin="normal" variant="outlined">
-        <InputLabel>Assigned To</InputLabel>
-        <Select
-          multiple
-          name="assignedTo"
-          value={task.assignedTo}
-          onChange={handleAssignToChange}
-          renderValue={(selected) => selected.join(', ')}
-        >
-          {sampleTeamMemberData.map((member) => (
-            <MenuItem key={member.id} value={member.name}>
-              {member.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <Button onClick={handleAddTask} variant="contained" color="primary">
-        Add Task
-      </Button>
+      <form onSubmit={handleAddTask}>
+        <TextField
+          fullWidth
+          name="title"
+          value={task.title}
+          onChange={handleChange}
+          label="Title"
+          variant="outlined"
+          margin="normal"
+        />
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          name="description"
+          value={task.description}
+          onChange={handleChange}
+          label="Description"
+          variant="outlined"
+          margin="normal"
+        />
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <InputLabel>Status</InputLabel>
+          <Select name="status" value={task.status} onChange={handleChange}>
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="InActive">InActive</MenuItem>
+            <MenuItem value="Completed">Completed</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <InputLabel>Priority</InputLabel>
+          <Select name="priority" value={task.priority} onChange={handleChange}>
+            <MenuItem value="Low">Low</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <Autocomplete
+            multiple
+            options={teamMembers}
+            getOptionLabel={(option) => option.name}
+            value={teamMembers?.filter(member => task.assigned_to?.split(",")?.map(Number)?.includes(member.member_id))}
+            onChange={handleAssignToChange}
+            renderInput={(params) => <TextField {...params} label="Assigned To" variant="outlined" />}
+          />
+        </FormControl>
+        <Button type='submit' variant="contained" color="primary">
+          Add Task
+        </Button>
+      </form>
     </Box>
   );
 }

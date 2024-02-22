@@ -46,26 +46,6 @@ export default function LoginView() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // const response = await fetch('https://dummyjson.com/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ username, password }),
-      // });
-      // const data = await response.json();
-      // // console.log(response); // Log the response data
-      // // Check if login was successful (you may need to adjust this condition based on your backend response)
-      // if (response.status === 200) {
-      //   // Perform actions after successful login, e.g., set access token in local storage
-      //   login(data.token);
-      //   console.log(isAuthenticated)
-      //   router.reload();
-      //   router.push('/');
-
-      //   // navigate('/');
-      // } else {
-      //   setError(data.message);
-      //   setOpenSnackbar(true);
-      // }
       await authService.login(username, password);
       router.push('/');
     } catch (err) {
@@ -146,46 +126,6 @@ export default function LoginView() {
           }}
         >
           <Typography variant="h4" sx={{ mb: 5 }}>Sign in to Work App</Typography>
-
-
-
-          {/* <Stack direction="row" spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:google-fill" color="#DF3E30" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:facebook-fill" color="#1877F2" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
-            </Button>
-          </Stack> */}
-          {/* 
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              OR
-            </Typography>
-          </Divider> */}
 
           {renderForm}
 

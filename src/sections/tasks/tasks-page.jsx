@@ -2,20 +2,19 @@ import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
-import { Grid, Select, Divider, MenuItem, TextField, InputLabel, IconButton, FormControl, Container, Card } from '@mui/material';
+import Toolbar from '@mui/material/Toolbar';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import Toolbar from '@mui/material/Toolbar';
-
-import Iconify from 'src/components/iconify';
+import { Grid, Card, Divider, Container, IconButton } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
+import Iconify from 'src/components/iconify';
+
 import TaskCard from './task-card';
+import TaskFilters from './task-filters';
 // import TaskService from './services/TaskService'; // Assuming you have a service to handle API calls
 import TaskDeleteModal from './task-delete';
-import TaskFilters from './task-filters';
-import TaskToolbar from './task-toolbar';
 
 
 // import { GridOn, List } from '@mui/icons-material';
@@ -46,6 +45,15 @@ const TaskMainPage = () => {
   }, []);
 
   useEffect(() => {
+    const filterTasks = (taskList) => {
+      if (filterStatus === '') {
+        setFilteredTasks(taskList);
+      } else {
+        setFilteredTasks(taskList.filter(task =>
+          task.status === filterStatus
+        ));
+      }
+    };
     if (searchQuery.trim() === '') {
       filterTasks(tasks);
     } else {
@@ -53,8 +61,8 @@ const TaskMainPage = () => {
         task.title.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     }
-  });
-  // }, [searchQuery, tasks]);
+  // });
+  }, [filterStatus, searchQuery, tasks]);
 
   useEffect(() => {
     if (filterStatus === '') {
@@ -82,15 +90,15 @@ const TaskMainPage = () => {
     }
   };
 
-  const filterTasks = (taskList) => {
-    if (filterStatus === '') {
-      setFilteredTasks(taskList);
-    } else {
-      setFilteredTasks(taskList.filter(task =>
-        task.status === filterStatus
-      ));
-    }
-  };
+  // const filterTasks = (taskList) => {
+  //   if (filterStatus === '') {
+  //     setFilteredTasks(taskList);
+  //   } else {
+  //     setFilteredTasks(taskList.filter(task =>
+  //       task.status === filterStatus
+  //     ));
+  //   }
+  // };
 
   const handleCardClick = (taskId) => {
     router.push(`/tasks/${taskId}`);
@@ -107,6 +115,25 @@ const TaskMainPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
+
+      try {
+        const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${selectedTask}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          // Task updated successfully, navigate to task details page
+          // You can use useHistory() to navigate or any other navigation method
+          router.push('/tasks');
+          // console.log(formData)
+        } else {
+          console.error('Failed to Delete task');
+        }
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
       // await TaskService.deleteTask(selectedTask);
       console.log(selectedTask);
       setShowDeleteModal(false);
@@ -133,61 +160,9 @@ const TaskMainPage = () => {
     setSearchQuery(event.target.value);
   };
 
-  // const handleAddTask = () => {
-  //   router.push('/tasks/add');
-  // }
-
   return (
     <Container>
-      {/* <Button onClick={handleAddTask}>Add</Button> */}
       <Card>
-        {/* <Stack direction='row' spacing={3} justifyContent="flex-start"
-        alignItems="flex-start" sx={{ mb: 2 }}>
-        <TextField
-          placeholder="Search tasks"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        // InputProps={{
-        //   endAdornment: (
-        //     <IconButton onClick={fetchTasks} sx={{ p: '10px' }}>
-        //       <SearchIcon />
-        //     </IconButton>
-        //   )
-        // }}
-        />
-        <FormControl>
-          <InputLabel variant='outlined' shrink>Filter</InputLabel>
-          <Select value={filterStatus} displayEmpty onChange={handleFilterChange}>
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="InActive">InActive</MenuItem>
-            <MenuItem value="Completed">Completed</MenuItem>
-          </Select>
-        </FormControl>
-        <IconButton onClick={() => handleViewChange('grid')}>
-          <GridOn />
-        </IconButton>
-        <IconButton onClick={() => handleViewChange('list')}>
-          <List />list
-        </IconButton>
-        <Stack
-        direction="row"
-        alignItems="center"
-        flexWrap="wrap-reverse"
-        justifyContent="flex-end"
-        sx={{ mb: 5 }}
-      >
-        <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-          <TaskFilters
-            openFilter={openFilter}
-            onOpenFilter={handleOpenFilter}
-            onCloseFilter={handleCloseFilter}
-          />
-
-          <ProductSort />
-        </Stack>
-      </Stack>
-      </Stack> */}
         <Toolbar
           sx={{
             height: 96,
@@ -245,7 +220,7 @@ const TaskMainPage = () => {
         {view === 'grid' ? (
           <Grid container spacing={2}>
             {filteredTasks.map((task) => (
-              <Grid item key={task.id} xs={12} sm={6} md={4}>
+              <Grid item key={task.task_id} xs={12} sm={6} md={4}>
                 <TaskCard
                   task={task}
                   onClick={() => handleCardClick(task.task_id)}

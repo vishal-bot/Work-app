@@ -16,9 +16,10 @@ import AppTasksUpdate from '../app-tasks-update';
 import AppOrderTimeline from '../app-order-timeline';
 // import AppCurrentVisits from '../app-current-visits';
 // import AppWebsiteVisits from '../app-website-visits';
+import AppSideFiller from '../app-side-filler';
 import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
-import AppSideFiller from '../app-side-filler';
+
 // import AppCurrentSubject from '../app-current-subject';
 // import AppConversionRates from '../app-conversion-rates';
 
@@ -89,7 +90,7 @@ export default function AppView() {
 
   useEffect(() => {
     fetchProjects();
-  },[]);
+  }, []);
 
   const fetchProjects = async () => {
     try {
@@ -169,67 +170,6 @@ export default function AppView() {
         Hi, Welcome back 👋
       </Typography>
 
-      {/* <Box display="flex">
-        <Box p={2}>
-          <Grid container spacing={3}>
-            <Grid xs={12} sm={6} md={6}>
-              <AppWidgetSummary
-                title="Active Tasks"
-                total={taskStatistics.active}
-                color="success"
-                icon={<img alt="icon" src="/assets/icons/glass/task-active.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={6}>
-              <AppWidgetSummary
-                title="InActive Tasks"
-                total={taskStatistics.inactive}
-                color="info"
-                icon={<img alt="icon" src="/assets/icons/glass/task-inactive.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={6}>
-              <AppWidgetSummary
-                title="Completed Tasks"
-                total={taskStatistics.completed}
-                color="warning"
-                icon={<img alt="icon" src="/assets/icons/glass/task-completed.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={6}>
-              <AppWidgetSummary
-                title="Total Tasks"
-                total={taskStatistics.total}
-                color="error"
-                icon={<img alt="icon" src="/assets/icons/glass/task-active.png" />}
-              />
-            </Grid>
-
-          </Grid>
-        </Box>
-        <Box p={2}>
-          <Grid container spacing={3}>
-            <AppOrderTimeline
-              title="Projects Timeline"
-              list={[...Array(3)].map((_, index) => ({
-                id: faker.string.uuid(),
-                title: [
-                  '1983, orders, $4220',
-                  '12 Invoices have been paid',
-                  'Order #37745 from September',
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
-              }))}
-            />
-          </Grid>
-
-        </Box>
-      </Box> */}
-
       <Grid container py={1} spacing={3} sx={{
         '--Grid-borderWidth': '1px',
         border: 'var(--Grid-borderWidth) dashed',
@@ -281,72 +221,15 @@ export default function AppView() {
         {/* Second Grid Container */}
         <Grid xs={12} sm={4} md={4} lg={4}>
           <Box>
-            <Grid spacing={3}>
+            <Grid spacing={2}>
               <AppSideFiller
-                title="Tasks Side"
+                title="Tasks Stats"
                 icon={<img alt="icon" src="/assets/left.png" />}
               />
             </Grid>
           </Box>
         </Grid>
       </Grid>
-
-
-      {/* <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={8}>
-          <Grid container>
-            <Grid item xs={12} lg={6} md={6}>
-              <AppWidgetSummary
-                title="Active Tasks"
-                total={taskStatistics.active}
-                color="success"
-                icon={<img alt="icon" src="/assets/icons/glass/task-active.png" />}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} md={6}>
-              <AppWidgetSummary
-                title="InActive Tasks"
-                total={taskStatistics.inactive}
-                color="info"
-                icon={<img alt="icon" src="/assets/icons/glass/task-inactive.png" />}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} md={6}>
-              <AppWidgetSummary
-                title="Completed Tasks"
-                total={taskStatistics.completed}
-                color="warning"
-                icon={<img alt="icon" src="/assets/icons/glass/task-completed.png" />}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} md={6}>
-              <AppWidgetSummary
-                title="Total Tasks"
-                total={taskStatistics.total}
-                color="error"
-                icon={<img alt="icon" src="/assets/icons/glass/task-active.png" />}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AppOrderTimeline
-            title="Projects Timeline"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: [
-                '1983, orders, $4220',
-                '12 Invoices have been paid',
-                'Order #37745 from September',
-                'New order placed #XF-2356',
-                'New order placed #XF-2346',
-              ][index],
-              type: `order${index + 1}`,
-              time: faker.date.past(),
-            }))}
-          />
-        </Grid>
-      </Grid> */}
 
       <Grid container py={1} spacing={3} sx={{
         '--Grid-borderWidth': '1px',
@@ -356,9 +239,9 @@ export default function AppView() {
         {/* Second Grid Container */}
         <Grid xs={12} sm={4} md={4} lg={4}>
           <Box>
-            <Grid spacing={3}>
+            <Grid spacing={2}>
               <AppSideFiller
-                title="Projects Side"
+                title="Projects Stats"
                 icon={<img alt="icon" src="/assets/right.png" />}
               />
             </Grid>
@@ -410,44 +293,6 @@ export default function AppView() {
 
       </Grid>
 
-      {/* <Grid container spacing={2}>
-        <Grid xs={12} sm={6} md={6}>
-          <AppWidgetSummary
-            title="Active Projects"
-            total={8}
-            color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/project-active.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={6}>
-          <AppWidgetSummary
-            title="InActive Projects"
-            total={2}
-            color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/project-inactive.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={6}>
-          <AppWidgetSummary
-            title="Completed Projects"
-            total={20}
-            color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/project-completed.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={6}>
-          <AppWidgetSummary
-            title="Bug Reports"
-            total={234}
-            color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
-          />
-        </Grid>
-
-      </Grid> */}
 
       {/* <Grid xs={12} md={6} lg={8}>
           <AppWebsiteVisits
@@ -545,8 +390,8 @@ export default function AppView() {
           <Grid xs={12} md={6} lg={8}>
             <AppTasksUpdate
               title="Newly Added Tasks"
-              list={newTasks.slice(0,4).map((newTask, index) => ({
-                id: newTask.id,
+              list={newTasks.slice(0, 4).map((newTask, index) => ({
+                id: newTask.task_id,
                 title: newTask.title,
                 description: newTask.description,
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
