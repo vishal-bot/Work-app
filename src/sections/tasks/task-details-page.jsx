@@ -1,10 +1,14 @@
 import {  useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box, List, Button, Divider, ListItem, TextField, Typography, ListItemText } from '@mui/material';
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import { Box, List, Button, Divider, ListItem, TextField, Typography, ListItemText, Link, Paper } from '@mui/material';
+// import { ArrowBackIcon } from '@mui/icons-material';
 
-// import { RouterLink } from 'src/routes/components';
+import Iconify from 'src/components/iconify';
+
+import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
 
 
@@ -74,15 +78,21 @@ export default function TaskDetailPage() {
     <Box>
       {/* <Link component={RouterLink} href="/tasks"> back </Link> */}
       {/* <ArrowBackIcon component={RouterLink} href="/tasks" /> */}
-      <Button onClick={handleArrowClick}>Back</Button>
+      {/* <Button onClick={handleArrowClick}>Back</Button> */}
+      <Tooltip title="Back">
+          <IconButton component={RouterLink} href="/tasks">
+          <Iconify sx={{height:32 , width:32 }} icon="ion:arrow-back" />
+          </IconButton>
+        </Tooltip>
       {task && (
         <Box>
+          <Paper elevation={3} sx={{ p:2, }}>
           <Typography variant="h4">{task.title}</Typography>
           <Typography variant="body1">{task.description}</Typography>
           <Typography variant="body2">Status: {task.status}</Typography>
           <Typography variant="body2">Priority: {task.priority}</Typography>
           <Typography variant="body2">Assigned To: {task.assigned_to}</Typography>
-
+          </Paper>
           <Divider sx={{ my: 2 }} />
 
           <Typography variant="h6">Comments</Typography>
@@ -110,6 +120,7 @@ export default function TaskDetailPage() {
           <Button onClick={handlePostComment} variant="contained" color="primary">
             Post Comment
           </Button>
+
         </Box>
       )}
     </Box>
