@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 import { Box, Select, Button, MenuItem, TextField, Typography, InputLabel, FormControl, Autocomplete, } from '@mui/material';
 
+import Iconify from 'src/components/iconify';
+
+import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
 
 export default function AddTaskPage() {
@@ -90,6 +95,11 @@ export default function AddTaskPage() {
 
   return (
     <Box>
+      <Tooltip title="Back">
+          <IconButton component={RouterLink} href="/tasks">
+          <Iconify sx={{height:32 , width:32 }} icon="ion:arrow-back" />
+          </IconButton>
+        </Tooltip>
       <Typography variant="h4">Add New Task</Typography>
       <form onSubmit={handleAddTask}>
         <TextField

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 
+
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
+import { List, GridOn } from '@mui/icons-material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import TablePagination from '@mui/material/TablePagination';
@@ -14,14 +16,11 @@ import Iconify from 'src/components/iconify';
 
 import NoData from './no-data';
 import TaskCard from './task-card';
-import TaskSort from './task-sort';
+// import TaskSort from './task-sort';
 import TaskFilters from './task-filters';
 // import TaskService from './services/TaskService'; // Assuming you have a service to handle API calls
 import TaskDeleteModal from './task-delete';
 
-
-
-// import { GridOn, List } from '@mui/icons-material';
 
 const TaskMainPage = () => {
   const router = useRouter();
@@ -213,13 +212,13 @@ const TaskMainPage = () => {
           >
             <Stack direction='row' sx={{ display: { xs: 'none', sm: 'block' } }}>
               <IconButton onClick={() => handleViewChange('grid')}>
-                {/* <GridOn /> */} Grid
+                 <GridOn />
               </IconButton>
               <IconButton onClick={() => handleViewChange('list')}>
-                {/* <List /> */} List
+                <List />
               </IconButton>
             </Stack>
-            <Stack direction="row" flexShrink={0} sx={{ my: 1 }} spacing={1}>
+            <Stack direction="row" flexShrink={0} sx={{ my: 1 }}>
               <TaskFilters
                 openFilter={openFilter}
                 onOpenFilter={handleOpenFilter}
@@ -227,7 +226,7 @@ const TaskMainPage = () => {
                 filterStatus={filterStatus}
                 handleFilterChange={handleFilterChange}
               />
-              <TaskSort />
+                            {/* <SortIcon /> */}
             </Stack>
           </Stack>
         </Toolbar>

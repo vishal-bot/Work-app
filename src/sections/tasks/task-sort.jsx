@@ -34,10 +34,10 @@ export default function TaskSort() {
         onClick={handleOpen}
         endIcon={<Iconify icon={open ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
       >
-        Sort
-       {/* <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
+        Sort By:&nbsp;
+        <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
           Newest
-  </Typography> */}
+        </Typography>
       </Button>
 
       <Menu

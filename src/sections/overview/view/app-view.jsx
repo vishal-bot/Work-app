@@ -50,7 +50,7 @@ export default function AppView() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
+      const response = await fetch('https://work-app-backend.onrender.com/api/tasks/new', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
