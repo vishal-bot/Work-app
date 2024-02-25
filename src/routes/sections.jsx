@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
+import KanbanBoard from 'src/sections/projects/kanban-board';
+import ProjectDetailsPage from 'src/sections/projects/projects-details';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -62,7 +64,13 @@ export default function Router({ authService }) {
             { path: 'edit/:taskId', element: <EditTaskPage /> },
           ]
         },
-        { path: 'projects', element: <ProjectsPage /> },
+        { path: 'projects',
+         element: <ProjectsPage />, 
+         children: [
+          { path: 'details', element: <ProjectDetailsPage/>},
+          { path: 'kanban', element: <KanbanBoard/>},
+         ]
+        },
         { path: 'about', element: <AboutPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

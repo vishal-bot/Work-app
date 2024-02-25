@@ -1,0 +1,38 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Typography, Tabs, Tab } from '@mui/material';
+
+import { RouterLink } from 'src/routes/components';
+
+import KanbanBoard from './kanban-board';
+// import ProjectDetails from './project-details;
+
+const ProjectDetailsPage = () => {
+    const [view, setView] = useState('details');
+
+    const handleTabChange = (event, newValue) => {
+      setView(newValue);
+    };
+ return (
+    <div>
+    <Typography variant="h4" gutterBottom>
+      Project Details
+    </Typography>
+    <Tabs value={view} onChange={handleTabChange}>
+      <Tab label="Details" value="details" component={RouterLink} to="/projects/details" />
+      <Tab label="Kanban Board" value="kanban" component={RouterLink} to="/projects/kanban" />
+    </Tabs>
+    {view === 'details' && <ProjectDetails />}
+    {view === 'kanban' && <KanbanBoard />}
+  </div>
+  );
+ };
+
+export default ProjectDetailsPage;
+
+const ProjectDetails = () => (
+      <div>
+        {/* Project details component */}
+        <Typography variant="body1">Project details go here.</Typography>
+      </div>
+    );
