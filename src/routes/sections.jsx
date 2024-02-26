@@ -5,6 +5,10 @@ import DashboardLayout from 'src/layouts/dashboard';
 import KanbanBoard from 'src/sections/projects/kanban-board';
 import ProjectDetailsPage from 'src/sections/projects/projects-details';
 
+import KanbanBoard from 'src/sections/projects/kanban-board';
+import ProjectDetailsPage from 'src/sections/projects/projects-details';
+import ProjectListPage from 'src/sections/projects/projects-list';
+
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
@@ -67,8 +71,8 @@ export default function Router({ authService }) {
         { path: 'projects',
          element: <ProjectsPage />, 
          children: [
-          { path: 'details', element: <ProjectDetailsPage/>},
-          { path: 'kanban', element: <KanbanBoard/>},
+          { path: '', element: <ProjectListPage /> },
+          { path:':id', element: <ProjectDetailsPage/>},
          ]
         },
         { path: 'about', element: <AboutPage /> },

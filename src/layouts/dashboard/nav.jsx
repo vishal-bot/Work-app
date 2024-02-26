@@ -176,11 +176,11 @@ function NavItem({ item }) {
   const pathname = usePathname();
 // console.log(pathname);
 // console.log(item.path);
+// console.log(item.path.includes(pathname));
+  const active = (item.path === pathname);
 
-  const active = item.path === pathname;
-
-  // if(pathname === 'tasks/edit/:taskId' || pathname === 'tasks/:taskId') {
-  //   active = 'tasks'
+  // if(pathname === 'tasks/*') {
+  //   active = true;
   // }
 
   return (

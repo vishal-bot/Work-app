@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Typography, Tabs, Tab } from '@mui/material';
 
-import { RouterLink } from 'src/routes/components';
+// import { Link } from 'react-router-dom';
+
+import { Tab, Tabs, Typography } from '@mui/material';
 
 import KanbanBoard from './kanban-board';
 // import ProjectDetails from './project-details;
@@ -14,17 +14,18 @@ const ProjectDetailsPage = () => {
       setView(newValue);
     };
  return (
-    <div>
-    <Typography variant="h4" gutterBottom>
+    <>
+    {/* <Typography variant="h4" gutterBottom>
       Project Details
-    </Typography>
+    </Typography> */}
     <Tabs value={view} onChange={handleTabChange}>
-      <Tab label="Details" value="details" component={RouterLink} to="/projects/details" />
-      <Tab label="Kanban Board" value="kanban" component={RouterLink} to="/projects/kanban" />
+      <Tab label="Details" value="details" />
+      <Tab label="Kanban Board" value="kanban" />
     </Tabs>
     {view === 'details' && <ProjectDetails />}
     {view === 'kanban' && <KanbanBoard />}
-  </div>
+  </>
+
   );
  };
 

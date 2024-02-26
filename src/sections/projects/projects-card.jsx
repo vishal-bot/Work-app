@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import { Card, CardContent, Typography } from '@mui/material';
-import { RouterLink } from 'src/routes/components';
+import { Card, Typography, CardContent } from '@mui/material';
 
 
-const ProjectCard = ({ project }) =>
-   (
+const ProjectCard = ({ project, onClick }) => (
     <Card>
       <CardContent>
-        <Typography variant="h5" component={RouterLink} to='/projects'>
+        <Typography variant="h5" onClick={onClick} sx={{cursor: 'pointer'}}>
           {project.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -23,8 +21,8 @@ const ProjectCard = ({ project }) =>
     </Card>
   );
 
-
 export default ProjectCard;
 ProjectCard.propTypes = {
     project: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired,
   }
