@@ -1,3 +1,4 @@
+
 import React, { useState} from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -14,6 +15,7 @@ const ProjectView = () => {
   // router.push('/tasks/addTask');
 }
   return (
+
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Projects</Typography>
@@ -25,6 +27,7 @@ const ProjectView = () => {
       <Outlet />
       </Stack>
     </Container>
+
   );
 };
 
