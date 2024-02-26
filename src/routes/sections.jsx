@@ -3,6 +3,10 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
+import KanbanBoard from 'src/sections/projects/kanban-board';
+import ProjectDetailsPage from 'src/sections/projects/projects-details';
+import ProjectListPage from 'src/sections/projects/projects-list';
+
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
@@ -62,7 +66,13 @@ export default function Router({ authService }) {
             { path: 'edit/:taskId', element: <EditTaskPage /> },
           ]
         },
-        { path: 'projects', element: <ProjectsPage /> },
+        { path: 'projects',
+         element: <ProjectsPage />, 
+         children: [
+          { path: '', element: <ProjectListPage /> },
+          { path:':id', element: <ProjectDetailsPage/>},
+         ]
+        },
         { path: 'about', element: <AboutPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

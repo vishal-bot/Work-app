@@ -180,7 +180,7 @@ const TaskMainPage = () => {
 
   const notFound = !filteredTasks.length;
   return (
-    <Container>
+    <>
       <Card>
         <Toolbar
           sx={{
@@ -280,7 +280,7 @@ const TaskMainPage = () => {
           onCancel={handleCancelDelete}
         />
       </Stack>
-    </Container>
+    </>
   );
 };
 
