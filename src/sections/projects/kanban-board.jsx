@@ -1,93 +1,97 @@
-import React, { useState } from 'react';
 import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+
+import { useRouter } from 'src/routes/hooks';
+// import { styled } from '@mui/material';
 // import { makeStyles } from '@mui/material/styles';
-import { Grid, Paper, Typography, Button, TextField } from '@mui/material';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Grid, Card, Paper, Stack, styled, Typography } from '@mui/material';
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-//     minHeight: 200,
-//   },
-//   stage: {
-//     padding: theme.spacing(1),
-//     marginBottom: theme.spacing(2),
-//     backgroundColor: '#f0f0f0',
-//   },
-// }));
+const useStyles = styled((theme) => ({
+  boardContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(2),
+  },
+  column: {
+    padding: theme.spacing(2),
+  },
+  columnHeader: {
+    marginBottom: theme.spacing(1),
+  },
+  taskContainer: {
+    padding: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+  },
+}));
 
-const KanbanBoard = () => {
+const KanbanBoard = ({ project, projectId }) => {
+  const router = useRouter();
+  const classes = useStyles();
+
+
   // const  = useStyles();
-  const [stages, setStages] = useState(['To Do', 'In Progress', 'Done']);
-  const [newStage, setNewStage] = useState('');
-  const [tasks, setTasks] = useState([{ id: 'task-1', title: 'Task 1', status: 'To Do' }, { id: 'task-2', title: 'Task 2', status: 'In Progress' }, { id: 'task-3', title: 'Task 3', status: 'Done'}]);
+  const [stages, setStages] = useState(['ToDo', 'InProgress', 'Done']);
+  const [tasks, setTasks] = useState([]);
 
-  const handleDragEnd = (result) => {
-    // Handle the reordering of tasks here
-  };
+  const { VITE_BACKEND_API_URL } = import.meta.env;
 
-  const handleCreateStage = () => {
-    if (newStage) {
-      setStages([...stages, newStage]);
-      setNewStage('');
-    }
+  console.log(tasks);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${VITE_BACKEND_API_URL}project/tasks/${projectId}`);
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchTasks();
+  }, [VITE_BACKEND_API_URL, projectId]);
+
+
+
+  const handleTaskClick = (taskId) => {
+    router.push(`/tasks/${taskId}`);
   };
 
   return (
     <div>
-      <Grid container spacing={3}>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          {stages.map((stage, index) => (
-            <Grid item xs={4} key={stage}>
-              <Paper>
-                <Typography variant="h6" gutterBottom>
-                  {stage}
-                </Typography>
-                <Droppable droppableId={stage}>
-                  {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                      {tasks.map((task, i) => (
-                        task.status === stage && (
-                          <Draggable key={task.id} draggableId={task.id} index={i}>
-                            {(provide) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <Paper>
-                                  {task.title}
-                                </Paper>
-                              </div>
-                            )}
-                          </Draggable>
-                        )
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </Paper>
-            </Grid>
-          ))}
-        </DragDropContext>
+      <Grid container spacing={1} sx={{
+        '--Grid-borderWidth': '1px',
+        border: 'var(--Grid-borderWidth) dashed',
+        borderColor: 'divider',
+      }}>
+        {stages.map((stage, index) => (
+          <Grid item xs={4} key={stage}>
+            <Card sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                {stage}
+              </Typography>
+              {tasks.map((task, i) => (
+                task.stage === stage && (
+                  <Stack key={task.task_id} index={i}>
+                    <Paper elevation={3} sx={{ p: 2, m: 1 }}>
+                      <Typography>{task.task_title}</Typography>
+                    </Paper>
+                  </Stack>
+                )
+              ))}
+            </Card>
+          </Grid>
+        ))}
       </Grid>
-      <TextField
-        label="New Stage"
-        value={newStage}
-        onChange={(e) => setNewStage(e.target.value)}
-      />
-      <Button variant="contained" onClick={handleCreateStage}>Create Stage</Button>
     </div>
   );
 };
 
 export default KanbanBoard;
 KanbanBoard.propTypes = {
-    tasks: PropTypes.object.isRequired,
-  }
+  project: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired,
+}

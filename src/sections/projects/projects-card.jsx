@@ -8,13 +8,13 @@ const ProjectCard = ({ project, onClick }) => (
     <Card>
       <CardContent>
         <Typography variant="h5" onClick={onClick} sx={{cursor: 'pointer'}}>
-          {project.title}
+          {project.project_name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {project.description}
+          {project.project_desc}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Team: {project.team}
+          Team: {project.team_id}
         </Typography>
         {/* Add onClick event to navigate to project details page */}
       </CardContent>

@@ -65,7 +65,7 @@ const TaskMainPage = () => {
       filterTasks(tasks);
     } else {
       filterTasks(tasks.filter(task =>
-        task.title.toLowerCase().includes(searchQuery.toLowerCase())
+        task.task_title.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     }
     setPage(0);
@@ -86,7 +86,7 @@ const TaskMainPage = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
+      const response = await fetch('http://localhost:3000/api/tasks', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -126,16 +126,14 @@ const TaskMainPage = () => {
     try {
 
       try {
-        const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${selectedTask}`, {
+        const response = await fetch(`http://localhost:3000/api/tasks/${selectedTask}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
         });
         if (response.ok) {
-          // Task updated successfully, navigate to task details page
-          // You can use useHistory() to navigate or any other navigation method
-          router.push('/tasks');
+          // router.push('/tasks');
           // console.log(formData)
         } else {
           console.error('Failed to Delete task');
@@ -252,12 +250,12 @@ const TaskMainPage = () => {
         ) : (
           <Grid container spacing={2}>
             {filteredTasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
-              <Grid item key={task.id} xs={12} sm={12} md={12}>
+              <Grid item key={task.task_id} xs={12} sm={12} md={12}>
                 <TaskCard
                   task={task}
-                  onClick={() => handleCardClick(task.id)}
-                  onEdit={() => handleEditTask(task.id)}
-                  onDelete={() => handleDeleteTask(task.id)}
+                  onClick={() => handleCardClick(task.task_id)}
+                  onEdit={() => handleEditTask(task.task_id)}
+                  onDelete={() => handleDeleteTask(task.task_id)}
                 />
               </Grid>
             ))}

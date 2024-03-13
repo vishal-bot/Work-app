@@ -43,7 +43,7 @@ export default function TeamPage() {
     // Fetch task data based on taskId
     const fetchTeamMembers = async () => {
       try {
-        const response = await fetch('https://work-app-backend.onrender.com/api/team', {
+        const response = await fetch('http://localhost:3000/api/team', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'

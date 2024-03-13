@@ -13,20 +13,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { account } from 'src/_mock/account';
 import authService from 'src/services/authService';
-// ----------------------------------------------------------------------
 
-// const MENU_OPTIONS = [
-//   {
-//     label: 'Home',
-//     icon: 'eva:home-fill',
-//   },
-//   {
-//     label: 'Profile',
-//     icon: 'eva:person-fill',
-//   }
-// ];
-
-// ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
@@ -41,14 +28,6 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  // const handleMenuOption = (label) => {
-  //   // if (label === 'Home') {
-  //   //   router.push('/');
-  //   // } else if (label === 'Profile') {
-  //   //   router.push('/profile');
-  //   // }
-  //   console.log(label);
-  // };
 
   const handleHome = () => {
     setOpen(null);
@@ -56,6 +35,7 @@ export default function AccountPopover() {
   }
 
   const handleProfile = () => {
+    setOpen(null);
     router.push('/profile');
   };
 
@@ -117,11 +97,6 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {/* {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleMenuOption(option.label)}>
-            {option.label}
-          </MenuItem>
-        ))} */}
         <MenuItem onClick={handleHome}>Home</MenuItem>
         <MenuItem onClick={handleProfile}>Profile</MenuItem>
 

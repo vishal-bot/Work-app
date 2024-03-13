@@ -2,6 +2,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
+import dotenv from 'dotenv';
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +15,9 @@ export default defineConfig({
       },
     }),
   ],
+  define:{
+    'process.env.VITE_BACKEND_API_URL': process.env.VITE_BACKEND_API_URL,
+  },
   resolve: {
     alias: [
       {

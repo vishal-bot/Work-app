@@ -10,21 +10,28 @@ import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
 
 export default function AddTaskPage() {
+
+  const {VITE_BACKEND_API_URL} = import.meta.env;
+
+
+  const [selectedProject, setSelectedProject] = useState();
   const router = useRouter();
   const [teamMembers, setTeamMembers] = useState([]);
   const [task, setTask] = useState({
-    title: '',
-    description: '',
+    task_title: '',
+    task_desc: '',
+    stage: '',
     status: '',
     priority: '',
     assigned_to: '',
+    project_id: '',
   });
 
   useEffect(() => {
     // Fetch task data based on taskId
     const fetchTeamMembers = async () => {
       try {
-        const response = await fetch('https://work-app-backend.onrender.com/api/team', {
+        const response = await fetch(`${VITE_BACKEND_API_URL}team`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -38,7 +45,7 @@ export default function AddTaskPage() {
     };
     fetchTeamMembers();
     // setTeamMembers(sampleTeamMemberData);
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -48,12 +55,22 @@ export default function AddTaskPage() {
     }));
   };
 
-  // const handleAssignToChange = (event) => {
-  //   setTask((prevTask) => ({
-  //     ...prevTask,
-  //     assignedTo: event.target.value,
-  //   }));
-  // };
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(`${VITE_BACKEND_API_URL}project`);
+        const data = await response.json();
+        setProjects(data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, [VITE_BACKEND_API_URL]);
+
   const handleAssignToChange = (e, values) => {
     const selectedIds = values.map(value => value.member_id);
     setTask({ ...task, assigned_to: selectedIds?.toString() });
@@ -62,10 +79,10 @@ export default function AddTaskPage() {
 
   const handleAddTask = async (e) => {
     // Logic to add the task (replace with actual API call)
-
+    console.log('New Task:', task);
     e.preventDefault();
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/api/tasks', {
+      const response = await fetch('http://localhost:3000/api/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,14 +92,17 @@ export default function AddTaskPage() {
       if (response.ok) {
         // Task added successfully, navigate to tasks page
         // Reset the form after adding the task
-        console.log('New Task:', task);
+        
         setTask({
-          title: '',
-          description: '',
+          task_title: '',
+          task_desc: '',
+          stage: '',
           status: '',
           priority: '',
           assigned_to: '',
+          project_id: '',
         });
+        setSelectedProject(null);
         router.push('/tasks');
       } else {
         console.error('Failed to add task');
@@ -96,16 +116,16 @@ export default function AddTaskPage() {
   return (
     <Box>
       <Tooltip title="Back">
-          <IconButton component={RouterLink} href="/tasks">
-          <Iconify sx={{height:32 , width:32 }} icon="ion:arrow-back" />
-          </IconButton>
-        </Tooltip>
+        <IconButton component={RouterLink} href="/tasks">
+          <Iconify sx={{ height: 32, width: 32 }} icon="ion:arrow-back" />
+        </IconButton>
+      </Tooltip>
       <Typography variant="h4">Add New Task</Typography>
       <form onSubmit={handleAddTask}>
         <TextField
           fullWidth
-          name="title"
-          value={task.title}
+          name="task_title"
+          value={task.task_title}
           onChange={handleChange}
           label="Title"
           variant="outlined"
@@ -115,13 +135,21 @@ export default function AddTaskPage() {
           fullWidth
           multiline
           rows={4}
-          name="description"
-          value={task.description}
+          name="task_desc"
+          value={task.task_desc}
           onChange={handleChange}
           label="Description"
           variant="outlined"
           margin="normal"
         />
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <InputLabel>Stage</InputLabel>
+          <Select name="stage" value={task.stage} onChange={handleChange}>
+            <MenuItem value="ToDo">ToDo</MenuItem>
+            <MenuItem value="InProgress">InProgress</MenuItem>
+            <MenuItem value="Done">Done</MenuItem>
+          </Select>
+        </FormControl>
         <FormControl fullWidth margin="normal" variant="outlined">
           <InputLabel>Status</InputLabel>
           <Select name="status" value={task.status} onChange={handleChange}>
@@ -147,6 +175,19 @@ export default function AddTaskPage() {
             onChange={handleAssignToChange}
             renderInput={(params) => <TextField {...params} label="Assigned To" variant="outlined" />}
           />
+        </FormControl>
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <Autocomplete
+            disablePortal
+            options={projects.map((option) => option.project_name)}
+            // sx={{ width: 300 }}
+            value={selectedProject}
+            onChange={(event, newProject) => {
+              setSelectedProject(projects?.filter(project => project.project_name === newProject));
+              setTask({...task, project_id: selectedProject[0].project_id });
+            }}
+            renderInput={(params) => <TextField {...params} label="Project" />}
+          />    
         </FormControl>
         <Button type='submit' variant="contained" color="primary">
           Add Task

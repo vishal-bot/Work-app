@@ -16,8 +16,9 @@ export default function EditTaskPage() {
   const [teamMembers, setTeamMembers] = useState([]);
   // const [task, setTask] = useState({});
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    task_title: '',
+    task_desc: '',
+    stage: '',
     status: '',
     priority: '',
     assigned_to: '',
@@ -27,13 +28,14 @@ export default function EditTaskPage() {
     // Fetch task data based on taskId
     const fetchTask = async () => {
       try {
-        const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${taskId}`);
+        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`);
         const data = await response.json();
         const row = data[0];
         // setTask(row);
         setFormData({
-          title: row.title,
-          description: row.description,
+          task_title: row.task_title,
+          task_desc: row.task_desc,
+          stage: row.stage,
           status: row.status,
           priority: row.priority,
           assigned_to: row.assigned_to,
@@ -50,7 +52,7 @@ export default function EditTaskPage() {
     // Fetch task data based on taskId
     const fetchTeamMembers = async () => {
       try {
-        const response = await fetch('https://work-app-backend.onrender.com/api/team', {
+        const response = await fetch('http://localhost:3000/api/team', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -75,11 +77,12 @@ export default function EditTaskPage() {
     setFormData({ ...formData, assigned_to: selectedIds?.toString() });
     // console.log(formData)
   };
+
   // console.log(formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${taskId}`, {
+      const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -99,22 +102,21 @@ export default function EditTaskPage() {
     }
   };
 
-
   return (
     <Box>
       <Tooltip title="Back">
-          <IconButton component={RouterLink} href="/tasks">
-          <Iconify sx={{height:32 , width:32 }} icon="ion:arrow-back" />
-          </IconButton>
-        </Tooltip>
+        <IconButton component={RouterLink} href="/tasks">
+          <Iconify sx={{ height: 32, width: 32 }} icon="ion:arrow-back" />
+        </IconButton>
+      </Tooltip>
       {formData && (
-        <Box>
+        <Box sx={{}}>
           <Typography variant="h4">Edit Task</Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              name='title'
-              value={formData.title}
+              name='task_title'
+              value={formData.task_title}
               onChange={handleChange}
               label="Title"
               variant="outlined"
@@ -123,14 +125,22 @@ export default function EditTaskPage() {
             <TextField
               fullWidth
               multiline
-              name='description'
+              name='task_desc'
               rows={4}
-              value={formData.description}
+              value={formData.task_desc}
               onChange={handleChange}
               label="Description"
               variant="outlined"
               margin="normal"
             />
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel>Stage</InputLabel>
+              <Select value={formData.stage} name='stage' onChange={handleChange}>
+                <MenuItem value="ToDo">ToDo</MenuItem>
+                <MenuItem value="InProgress">InProgress</MenuItem>
+                <MenuItem value="Done">Done</MenuItem>
+              </Select>
+            </FormControl>
             <FormControl fullWidth margin="normal" variant="outlined">
               <InputLabel>Status</InputLabel>
               <Select value={formData.status} name='status' onChange={handleChange}>
@@ -155,9 +165,8 @@ export default function EditTaskPage() {
               onChange={handleAssignedToChange}
               renderInput={(params) => <TextField {...params} label="Assigned To" variant="outlined" />}
             />
-
             <Button type='submit' variant="contained" color="primary">
-              Assign Task
+              Update Task
             </Button>
           </form>
         </Box>

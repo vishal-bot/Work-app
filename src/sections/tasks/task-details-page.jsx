@@ -3,14 +3,11 @@ import { useParams } from 'react-router-dom';
 
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
-import { Box, List, Button, Divider, ListItem, TextField, Typography, ListItemText, Link, Paper } from '@mui/material';
-// import { ArrowBackIcon } from '@mui/icons-material';
-
-import Iconify from 'src/components/iconify';
+import { Box, List, Paper, Button, Divider, ListItem, TextField, Typography, ListItemText } from '@mui/material';
 
 import { RouterLink } from 'src/routes/components';
-import { useRouter } from 'src/routes/hooks';
 
+import Iconify from 'src/components/iconify';
 
 export default function TaskDetailPage() {
   const { taskId } = useParams();
@@ -18,21 +15,12 @@ export default function TaskDetailPage() {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
 
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   // Fetch task details based on taskId (replace with actual API call)
-  //   setTask(sampleTaskData);
-
-  //   // Fetch comments for the task (replace with actual API call)
-  //   // setComments([...]); // Update comments state with fetched comments
-  // }, [taskId]);
 
   useEffect(() => {
     // Fetch task data based on taskId
     const fetchTask = async () => {
       try {
-        const response = await fetch(`https://work-app-backend.onrender.com/api/tasks/${taskId}`);
+        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`);
         const data = await response.json();
         setTask(data[0]);
       } catch (error) {
@@ -71,14 +59,8 @@ export default function TaskDetailPage() {
     setComments([...comments, { text: comment, author: 'Current User', date: new Date() }]);
   };
 
-  const handleArrowClick = () => {
-    router.back();
-  }
   return (
     <Box>
-      {/* <Link component={RouterLink} href="/tasks"> back </Link> */}
-      {/* <ArrowBackIcon component={RouterLink} href="/tasks" /> */}
-      {/* <Button onClick={handleArrowClick}>Back</Button> */}
       <Tooltip title="Back">
           <IconButton component={RouterLink} href="/tasks">
           <Iconify sx={{height:32 , width:32 }} icon="ion:arrow-back" />
@@ -87,11 +69,14 @@ export default function TaskDetailPage() {
       {task && (
         <Box>
           <Paper elevation={3} sx={{ p:2, }}>
-          <Typography variant="h4">{task.title}</Typography>
-          <Typography variant="body1">{task.description}</Typography>
+          <Typography variant="h4">{task.task_title}</Typography>
+          <Typography variant="body1">{task.task_desc}</Typography>
+          <Typography variant="body2">Creation time: {task.created_at}</Typography>
+          <Typography variant="body2">Stage: {task.stage}</Typography>
           <Typography variant="body2">Status: {task.status}</Typography>
           <Typography variant="body2">Priority: {task.priority}</Typography>
           <Typography variant="body2">Assigned To: {task.assigned_to}</Typography>
+          <Typography variant="body2">Project ID: {task.project_id}</Typography>
           </Paper>
           <Divider sx={{ my: 2 }} />
 

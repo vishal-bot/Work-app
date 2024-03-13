@@ -50,7 +50,7 @@ export default function AppView() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://work-app-backend.onrender.com/api/tasks/new', {
+      const response = await fetch('http://localhost:3000/api/tasks/new', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -78,34 +78,34 @@ export default function AppView() {
   }, [newTasks]);
 
 
-  // useEffect(() => {
-  //   const stats = {
-  //     active: newProjects.filter((object) => object.status === 'Active').length,
-  //     inactive: newProjects.filter((object) => object.status === 'InActive').length,
-  //     completed: newProjects.filter((object) => object.status === 'Completed').length,
-  //     total: newProjects.length,
-  //   }
-  //   setProjectStatistics(stats);
-  // }, [newProjects]);
+  useEffect(() => {
+    const stats = {
+      active: newProjects.filter((object) => object.status === 'Active').length,
+      inactive: newProjects.filter((object) => object.status === 'Inactive').length,
+      completed: newProjects.filter((object) => object.status === 'Completed').length,
+      total: newProjects.length,
+    }
+    setProjectStatistics(stats);
+  }, [newProjects]);
 
-  // useEffect(() => {
-  //   fetchProjects();
-  // }, []);
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
-  // const fetchProjects = async () => {
-  //   try {
-  //     const response = await fetch('https://work-app-backend.onrender.com/projects', {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json'
-  //       }
-  //     })
-  //     const data = await response.json();
-  //     setNewProjects(data);
-  //   } catch (error) {
-  //     console.error('Error fetching projects:', error);
-  //   }
-  // };
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/project', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+      const data = await response.json();
+      setNewProjects(data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
   // Fetch task statistics and new tasks/projects data from the backend
   // useEffect(() => {
 
@@ -392,8 +392,8 @@ export default function AppView() {
               title="Newly Added Tasks"
               list={newTasks.slice(0, 4).map((newTask, index) => ({
                 id: newTask.task_id,
-                title: newTask.title,
-                description: newTask.description,
+                title: newTask.task_title,
+                description: newTask.task_desc,
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
               }))}
@@ -462,10 +462,10 @@ export default function AppView() {
           <Grid xs={12} md={6} lg={8}>
             <AppTasksUpdate
               title="Newly Added Projects"
-              list={newProjects.map((newProject, index) => ({
-                id: newProject.id,
-                title: newProject.title,
-                description: newProject.description,
+              list={newProjects.slice(0, 4).map((newProject, index) => ({
+                id: newProject.project_id,
+                title: newProject.project_name,
+                description: newProject.project_desc,
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
               }))}

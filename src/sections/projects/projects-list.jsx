@@ -16,46 +16,29 @@ import ProjectCard from './projects-card';
 
 const ProjectListPage = () => {
 
+    const {VITE_BACKEND_API_URL} = import.meta.env;
+
     const [view, setView] = useState('grid');
 
-    const [projects, setProjects] = useState([
-        {
-            id: '1',
-            title: 'Project 1',
-            stages: [
-                { id: 'to-do', title: 'To Do', tasks: [{ id: 'task-1', title: 'Task 1' }, { id: 'task-2', title: 'Task 2' }] },
-                { id: 'in-progress', title: 'In Progress', tasks: [{ id: 'task-3', title: 'Task 3' }] },
-                { id: 'done', title: 'Done', tasks: [{ id: 'task-4', title: 'Task 4' }, { id: 'task-5', title: 'Task 5' }] },
-            ],
-        },
-        {
-            id: '2',
-            title: 'Project 2',
-            stages: [
-                { id: 'to-do', title: 'To Do', tasks: [{ id: 'task-6', title: 'Task 6' }, { id: 'task-7', title: 'Task 7' }] },
-                { id: 'in-progress', title: 'In Progress', tasks: [{ id: 'task-8', title: 'Task 8' }] },
-                { id: 'done', title: 'Done', tasks: [{ id: 'task-9', title: 'Task 9' }, { id: 'task-10', title: 'Task 10' }] },
-            ],
-        },
-    ]);
+    const [projects, setProjects] = useState([]);
 
-    // useEffect(() => {
-    //   const fetchProjects = async () => {
-    //     try {
-    //       const response = await fetch('backend-api-url/projects');
-    //       const data = await response.json();
-    //       setProjects(data);
-    //     } catch (error) {
-    //       console.error('Error fetching projects:', error);
-    //     }
-    //   };
+    useEffect(() => {
+      const fetchProjects = async () => {
+        try {
+          const response = await fetch(`${VITE_BACKEND_API_URL}project`);
+          const data = await response.json();
+          setProjects(data);
+        } catch (error) {
+          console.error('Error fetching projects:', error);
+        }
+      };
 
-    //   fetchProjects();
-    // }, []);
+      fetchProjects();
+    }, [VITE_BACKEND_API_URL]);
 
     const router = useRouter();
-    const handleProjectClick = (id) => {
-        router.push(`/projects/${id}`);
+    const handleProjectClick = (projectId) => {
+        router.push(`/projects/${projectId}`);
     }
 
     const handleViewChange = (viewType) => {
@@ -112,9 +95,9 @@ const ProjectListPage = () => {
                 {view === 'grid' ? (
                     <Grid container spacing={2}>
                         {projects.map(project => (
-                            <Grid item key={project.id} xs={12} sm={6} md={6}>
+                            <Grid item key={project.project_id} xs={12} sm={6} md={6}>
                                 <ProjectCard
-                                    project={project} onClick={() => handleProjectClick(project.id)}
+                                    project={project} onClick={() => handleProjectClick(project.project_id)}
                                 />
                             </Grid>
                         ))}
@@ -122,9 +105,9 @@ const ProjectListPage = () => {
                 ) : (
                     <Grid container spacing={2}>
                         {projects.map(project => (
-                            <Grid item key={project.id} xs={12} sm={12} md={12}>
+                            <Grid item key={project.project_id} xs={12} sm={12} md={12}>
                                 <ProjectCard
-                                    project={project} onClick={() => handleProjectClick(project.id)}
+                                    project={project} onClick={() => handleProjectClick(project.project_id)}
                                 />
                             </Grid>
                         ))}

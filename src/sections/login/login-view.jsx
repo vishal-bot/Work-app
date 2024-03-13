@@ -23,9 +23,6 @@ import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
 
-
-
-
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
@@ -34,6 +31,7 @@ export default function LoginView() {
 
   const router = useRouter();
 
+  const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
@@ -46,14 +44,16 @@ export default function LoginView() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await authService.login(username, password);
+      const res = await authService.login(username, password);
+      // console.log(res);
+      setUser(res);
       router.push('/');
     } catch (err) {
       setError(err.message);
       setOpenSnackbar(true);
     }
   };
-
+  
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
