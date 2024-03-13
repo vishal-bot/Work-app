@@ -1,45 +1,20 @@
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from 'react';
-import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Card, Grid, Modal, Paper, Stack, Typography, Button } from '@mui/material';
 import { useRouter } from 'src/routes/hooks';
-// import { styled } from '@mui/material';
-// import { makeStyles } from '@mui/material/styles';
-import { Grid, Card, Paper, Stack, styled, Typography } from '@mui/material';
-
-const useStyles = styled((theme) => ({
-  boardContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(2),
-  },
-  column: {
-    padding: theme.spacing(2),
-  },
-  columnHeader: {
-    marginBottom: theme.spacing(1),
-  },
-  taskContainer: {
-    padding: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
-  },
-}));
 
 const KanbanBoard = ({ project, projectId }) => {
   const router = useRouter();
-  const classes = useStyles();
-
-
-  // const  = useStyles();
   const [stages, setStages] = useState(['ToDo', 'InProgress', 'Done']);
   const [tasks, setTasks] = useState([]);
+  const [draggedTask, setDraggedTask] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
 
   const { VITE_BACKEND_API_URL } = import.meta.env;
 
-  console.log(tasks);
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -47,51 +22,135 @@ const KanbanBoard = ({ project, projectId }) => {
         const data = await response.json();
         setTasks(data);
       } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error('Error fetching tasks:', error);
       }
     };
-
+    // Fetch tasks from the database
     fetchTasks();
   }, [VITE_BACKEND_API_URL, projectId]);
-
+  console.log(tasks);
 
 
   const handleTaskClick = (taskId) => {
+    // Open task details modal
     router.push(`/tasks/${taskId}`);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const onDragStart = (result) => {
+    const { draggableId } = result;
+    setDraggedTask(draggableId);
+  };
+
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+    setDraggedTask(null);
+
+    if (!destination) {
+      return;
+    }
+
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+
+    // Reorder tasks in the same stage
+    const updatedTasks = Array.from(tasks);
+    const [removedTask] = updatedTasks[source.droppableId].splice(source.index, 1);
+    updatedTasks[destination.droppableId].splice(destination.index, 0, removedTask);
+
+    // Update tasks in the database
+    // Implement your API call to update the tasks
+     // Update tasks in the database
+  // Implement your API call to update the tasks
+  // For example:
+  // fetch(`${VITE_BACKEND_API_URL}/updateTasks`, {
+  //   method: 'PUT',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(updatedTasks),
+  // })
+  // .then(response => response.json())
+  // .then(data => console.log('Updated tasks:', data))
+  // .catch(error => console.error('Error updating tasks:', error));
+
+
+    setTasks(updatedTasks);
   };
 
   return (
-    <div>
-      <Grid container spacing={1} sx={{
-        '--Grid-borderWidth': '1px',
-        border: 'var(--Grid-borderWidth) dashed',
-        borderColor: 'divider',
-      }}>
-        {stages.map((stage, index) => (
-          <Grid item xs={4} key={stage}>
-            <Card sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                {stage}
-              </Typography>
-              {tasks.map((task, i) => (
-                task.stage === stage && (
-                  <Stack key={task.task_id} index={i}>
-                    <Paper elevation={3} sx={{ p: 2, m: 1 }}>
-                      <Typography>{task.task_title}</Typography>
+    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <div>
+        <Grid container spacing={2}>
+          {stages.map((stage, i) => (
+            <Grid item xs={4} key={stage}>
+              <Card sx={{ p: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  {stage}
+                </Typography>
+                <Droppable droppableId={stage} key={stage}>
+                  {(provided, dragSnapshot) => (
+                    <Paper
+                      ref={provided.innerRef}
+                      sx={{
+                        backgroundColor: dragSnapshot.isDraggingOver ? 'lightblue' : 'inherit',
+                        minHeight: '100px',
+                        padding: '8px',
+                      }}
+                    >
+                      {tasks.map((task, index) => {
+                        if (task.stage === stage) {
+                          return (
+                            <Draggable draggableId={task.task_id.toString()} key={task.task_id} index={index}>
+                              {(provide, snapshot) => (
+                                <Paper
+                                  ref={provide.innerRef}
+                                  {...provide.draggableProps}
+                                  {...provide.dragHandleProps}
+                                  onClick={() => handleTaskClick(task.task_id)}
+                                  sx={{
+                                    backgroundColor: snapshot.isDragging ? 'lightgreen' : 'white',
+                                    padding: '6px',
+                                    margin: '4px',
+                                  }}
+                                >
+                                  <Typography>{task.task_title}</Typography>
+                                </Paper>
+                              )}
+                            </Draggable>
+                          );
+                        }
+                          return null;
+                      })}
+                      {provided.placeholder}
                     </Paper>
-                  </Stack>
-                )
-              ))}
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+                  )}
+                </Droppable>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        <Modal open={showModal} onClose={handleCloseModal}>
+          <div>
+            <Typography variant="h5">Confirmation</Typography>
+            <Typography variant="body1">Are you sure you want to move this task?</Typography>
+            <Button onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button onClick={() => setShowModal(false)}>Confirm</Button>
+          </div>
+        </Modal>
+      </div>
+    </DragDropContext>
   );
 };
 
-export default KanbanBoard;
 KanbanBoard.propTypes = {
   project: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
 }
+
+export default KanbanBoard;
