@@ -10,6 +10,7 @@ const KanbanBoard = ({ project, projectId }) => {
   const [tasks, setTasks] = useState([]);
   const [draggedTask, setDraggedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [updatedTask, setUpdatedTask] = useState();
 
 
   const { VITE_BACKEND_API_URL } = import.meta.env;
@@ -28,13 +29,12 @@ const KanbanBoard = ({ project, projectId }) => {
     // Fetch tasks from the database
     fetchTasks();
   }, [VITE_BACKEND_API_URL, projectId]);
-  console.log(tasks);
+  // console.log(tasks);
 
 
   const handleTaskClick = (taskId) => {
     // Open task details modal
     router.push(`/tasks/${taskId}`);
-    setShowModal(true);
   };
 
   const handleCloseModal = () => {
@@ -47,41 +47,51 @@ const KanbanBoard = ({ project, projectId }) => {
   };
 
   const onDragEnd = (result) => {
-    const { destination, source } = result;
-    setDraggedTask(null);
+    setShowModal(true);
 
+    const { destination, source } = result;
+    // setDraggedTask(null);
+    console.log(destination);
+    // console.log(source);
     if (!destination) {
       return;
     }
-
+    console.log(draggedTask);
     if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
 
+
     // Reorder tasks in the same stage
     const updatedTasks = Array.from(tasks);
+    console.log(tasks?.find((task) => task.task_id === draggedTask));
+    console.log(updatedTasks);
     const [removedTask] = updatedTasks[source.droppableId].splice(source.index, 1);
+    console.log([removedTask]);
     updatedTasks[destination.droppableId].splice(destination.index, 0, removedTask);
 
-    // Update tasks in the database
-    // Implement your API call to update the tasks
-     // Update tasks in the database
-  // Implement your API call to update the tasks
-  // For example:
-  // fetch(`${VITE_BACKEND_API_URL}/updateTasks`, {
-  //   method: 'PUT',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(updatedTasks),
-  // })
-  // .then(response => response.json())
-  // .then(data => console.log('Updated tasks:', data))
-  // .catch(error => console.error('Error updating tasks:', error));
+
 
 
     setTasks(updatedTasks);
   };
+
+  const handleConfirm = (result) => {
+        // Update tasks in the database
+    // Implement your API call to update the tasks
+    // For example:
+    fetch(`${VITE_BACKEND_API_URL}tasks/stage/${draggedTask}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTask),
+    })
+      .then(response => response.json())
+      .then(data => console.log('Updated tasks:', data))
+      .catch(error => console.error('Error updating tasks:', error));
+    setShowModal(false);
+  }
 
   return (
     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -117,6 +127,7 @@ const KanbanBoard = ({ project, projectId }) => {
                                     backgroundColor: snapshot.isDragging ? 'lightgreen' : 'white',
                                     padding: '6px',
                                     margin: '4px',
+                                    border: 'dashed',
                                   }}
                                 >
                                   <Typography>{task.task_title}</Typography>
@@ -125,7 +136,7 @@ const KanbanBoard = ({ project, projectId }) => {
                             </Draggable>
                           );
                         }
-                          return null;
+                        return null;
                       })}
                       {provided.placeholder}
                     </Paper>
@@ -140,7 +151,7 @@ const KanbanBoard = ({ project, projectId }) => {
             <Typography variant="h5">Confirmation</Typography>
             <Typography variant="body1">Are you sure you want to move this task?</Typography>
             <Button onClick={() => setShowModal(false)}>Cancel</Button>
-            <Button onClick={() => setShowModal(false)}>Confirm</Button>
+            <Button onClick={handleConfirm}>Confirm</Button>
           </div>
         </Modal>
       </div>
