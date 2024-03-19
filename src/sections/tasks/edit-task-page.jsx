@@ -23,12 +23,13 @@ export default function EditTaskPage() {
     priority: '',
     assigned_to: '',
   });
+  const { VITE_BACKEND_API_URL } = import.meta.env;
 
   useEffect(() => {
     // Fetch task data based on taskId
     const fetchTask = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`);
+        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/${taskId}`);
         const data = await response.json();
         const row = data[0];
         // setTask(row);
@@ -45,14 +46,14 @@ export default function EditTaskPage() {
       }
     };
     fetchTask();
-  }, [taskId]);
+  }, [taskId, VITE_BACKEND_API_URL]);
 
 
   useEffect(() => {
     // Fetch task data based on taskId
     const fetchTeamMembers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/team', {
+        const response = await fetch(`${VITE_BACKEND_API_URL}team/${sessionStorage.getItem('teamId')}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -66,7 +67,7 @@ export default function EditTaskPage() {
     };
     fetchTeamMembers();
     // setTeamMembers(sampleTeamMemberData);
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,7 +83,7 @@ export default function EditTaskPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+      const response = await fetch(`${VITE_BACKEND_API_URL}tasks/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

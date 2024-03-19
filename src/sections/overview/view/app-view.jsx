@@ -42,27 +42,42 @@ export default function AppView() {
 
   const [newTasks, setNewTasks] = useState([]);
   const [newProjects, setNewProjects] = useState([]);
-
+  const { VITE_BACKEND_API_URL } = import.meta.env;
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/team/${sessionStorage.getItem('teamId')}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        // console.log(response);
+        const data = await response.json();
+        setNewTasks(data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
     fetchTasks();
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/tasks/new', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-      // console.log(response);
-      const data = await response.json();
-      setNewTasks(data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
+  // const fetchTasks = async () => {
+  //   try {
+  //     const response = await fetch(`${VITE_BACKEND_API_URL}tasks/team/${sessionStorage.getItem('teamId')}`, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       }
+  //     })
+  //     // console.log(response);
+  //     const data = await response.json();
+  //     setNewTasks(data);
+  //   } catch (error) {
+  //     console.error('Error fetching tasks:', error);
+  //   }
+  // };
 
   useEffect(() => {
     const taskStats = () => {
@@ -89,23 +104,37 @@ export default function AppView() {
   }, [newProjects]);
 
   useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(`${VITE_BACKEND_API_URL}project/team/${sessionStorage.getItem('teamId')}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        const data = await response.json();
+        setNewProjects(data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
     fetchProjects();
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/project', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-      const data = await response.json();
-      setNewProjects(data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
-  };
+  // const fetchProjects = async () => {
+  //   try {
+  //     const response = await fetch(`${VITE_BACKEND_API_URL}project/team/${sessionStorage.getItem('teamId')}`, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       }
+  //     })
+  //     const data = await response.json();
+  //     setNewProjects(data);
+  //   } catch (error) {
+  //     console.error('Error fetching projects:', error);
+  //   }
+  // };
   // Fetch task statistics and new tasks/projects data from the backend
   // useEffect(() => {
 

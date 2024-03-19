@@ -38,6 +38,8 @@ const TaskMainPage = () => {
   const [page, setPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(6);
+  const { VITE_BACKEND_API_URL } = import.meta.env;
+
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -48,8 +50,22 @@ const TaskMainPage = () => {
   };
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/team/${sessionStorage.getItem('teamId')}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
     fetchTasks();
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
   useEffect(() => {
     const filterTasks = (taskList) => {
@@ -83,21 +99,20 @@ const TaskMainPage = () => {
     setPage(0);
   }, [filterStatus, tasks]);
 
-
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/tasks', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-      const data = await response.json();
-      setTasks(data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
+  // const fetchTasks = async () => {
+  //   try {
+  //     const response = await fetch(`${VITE_BACKEND_API_URL}tasks/team/${sessionStorage.getItem('teamId')}`, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       }
+  //     })
+  //     const data = await response.json();
+  //     setTasks(data);
+  //   } catch (error) {
+  //     console.error('Error fetching tasks:', error);
+  //   }
+  // };
 
   // const filterTasks = (taskList) => {
   //   if (filterStatus === '') {
@@ -126,7 +141,7 @@ const TaskMainPage = () => {
     try {
 
       try {
-        const response = await fetch(`http://localhost:3000/api/tasks/${selectedTask}`, {
+        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/${selectedTask}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -144,7 +159,7 @@ const TaskMainPage = () => {
       // await TaskService.deleteTask(selectedTask);
       console.log(selectedTask);
       setShowDeleteModal(false);
-      fetchTasks(); // Refresh tasks after deletion
+      // fetchTasks(); // Refresh tasks after deletion
     } catch (error) {
       console.error('Error deleting task:', error);
     }

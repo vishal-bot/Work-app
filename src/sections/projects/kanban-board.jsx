@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card, Grid, Modal, Paper, Stack, Typography, Button } from '@mui/material';
 import { useRouter } from 'src/routes/hooks';
+import TaskDragModal from "./task-drag-modal";
 
 const KanbanBoard = ({ project, projectId }) => {
   const router = useRouter();
@@ -11,6 +12,7 @@ const KanbanBoard = ({ project, projectId }) => {
   const [draggedTask, setDraggedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updatedTask, setUpdatedTask] = useState();
+  const [showDragModal, setShowDragModal] = useState(false);
 
 
   const { VITE_BACKEND_API_URL } = import.meta.env;
@@ -38,7 +40,7 @@ const KanbanBoard = ({ project, projectId }) => {
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowDragModal(false);
   };
 
   const onDragStart = (result) => {
@@ -47,7 +49,7 @@ const KanbanBoard = ({ project, projectId }) => {
   };
 
   const onDragEnd = (result) => {
-    setShowModal(true);
+    setShowDragModal(true);
 
     const { destination, source } = result;
     // setDraggedTask(null);
@@ -76,7 +78,7 @@ const KanbanBoard = ({ project, projectId }) => {
     setTasks(updatedTasks);
   };
 
-  const handleConfirm = (result) => {
+  const handleConfirmModal = (result) => {
         // Update tasks in the database
     // Implement your API call to update the tasks
     // For example:
@@ -90,7 +92,7 @@ const KanbanBoard = ({ project, projectId }) => {
       .then(response => response.json())
       .then(data => console.log('Updated tasks:', data))
       .catch(error => console.error('Error updating tasks:', error));
-    setShowModal(false);
+    setShowDragModal(false);
   }
 
   return (
@@ -126,8 +128,10 @@ const KanbanBoard = ({ project, projectId }) => {
                                   sx={{
                                     backgroundColor: snapshot.isDragging ? 'lightgreen' : 'white',
                                     padding: '6px',
-                                    margin: '4px',
-                                    border: 'dashed',
+                                    margin: '6px',
+                                      '--task-borderWidth': '3px',
+                                      border: 'var(--task-borderWidth) dashed',
+                                      borderColor: 'divider',
                                   }}
                                 >
                                   <Typography>{task.task_title}</Typography>
@@ -146,14 +150,11 @@ const KanbanBoard = ({ project, projectId }) => {
             </Grid>
           ))}
         </Grid>
-        <Modal open={showModal} onClose={handleCloseModal}>
-          <div>
-            <Typography variant="h5">Confirmation</Typography>
-            <Typography variant="body1">Are you sure you want to move this task?</Typography>
-            <Button onClick={() => setShowModal(false)}>Cancel</Button>
-            <Button onClick={handleConfirm}>Confirm</Button>
-          </div>
-        </Modal>
+        <TaskDragModal
+          open={showDragModal}
+          onConfirm={handleConfirmModal}
+          onCancel={handleCloseModal}
+        />
       </div>
     </DragDropContext>
   );

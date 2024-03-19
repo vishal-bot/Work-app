@@ -39,11 +39,13 @@ export default function TeamPage() {
 
   const [team, setTeam] = useState([]);
 
+  const { VITE_BACKEND_API_URL } = import.meta.env;
+
   useEffect(() => {
     // Fetch task data based on taskId
     const fetchTeamMembers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/team', {
+        const response = await fetch(`${VITE_BACKEND_API_URL}team/${sessionStorage.getItem('teamId')}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -56,7 +58,7 @@ export default function TeamPage() {
       }
     };
     fetchTeamMembers();
-  }, []);
+  }, [VITE_BACKEND_API_URL]);
 
   const users = team.map((user, index) => ({
     id: user.member_id,

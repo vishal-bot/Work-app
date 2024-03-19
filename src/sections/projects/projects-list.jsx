@@ -25,7 +25,7 @@ const ProjectListPage = () => {
     useEffect(() => {
       const fetchProjects = async () => {
         try {
-          const response = await fetch(`${VITE_BACKEND_API_URL}project`);
+          const response = await fetch(`${VITE_BACKEND_API_URL}project/team/${sessionStorage.getItem('teamId')}`);
           const data = await response.json();
           setProjects(data);
         } catch (error) {

@@ -14,12 +14,13 @@ class AuthService {
     const data = await res.json();
     // Mock token handling (replace with your actual token handling logic)
     // sessionStorage.setItem("user", JSON.stringify(data));
-    const {token, name, email, role, member_id} = data;
+    const {token, name, email, role, member_id, team_id} = data;
     sessionStorage.setItem('token', token); // Store token in localStorage
     sessionStorage.setItem('name', name);
     sessionStorage.setItem('email', email);
     sessionStorage.setItem('role', role);
     sessionStorage.setItem('id', member_id);
+    sessionStorage.setItem('teamId', team_id);
     return data;
   }
 
