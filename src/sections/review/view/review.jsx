@@ -34,7 +34,7 @@ export default function ReviewView() {
       <Box>
         <Grid container spacing={2}>
           <Grid xs={12} sm={12} md={12} lg={12}>
-            {/* <UserUpdates /> */}
+            <UserUpdates /> 
           </Grid>
         </Grid>
       </Box>
