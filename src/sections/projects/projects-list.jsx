@@ -105,7 +105,7 @@ const ProjectListPage = () => {
                 ) : (
                     <Grid container spacing={2}>
                         {projects.map(project => (
-                            <Grid item key={project.project_id} xs={12} sm={12} md={12}>
+                            <Grid item key={project.project_id} xs={12} sm={8} md={8}>
                                 <ProjectCard
                                     project={project} onClick={() => handleProjectClick(project.project_id)}
                                 />

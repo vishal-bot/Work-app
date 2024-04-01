@@ -13,6 +13,11 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
+    title: 'review',
+    path: '/review',
+    icon: icon('ic_review'),
+  },
+  {
     title: 'team',
     path: '/team',
     icon: icon('ic_team'),

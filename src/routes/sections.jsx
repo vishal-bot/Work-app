@@ -6,6 +6,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 import ProjectListPage from 'src/sections/projects/projects-list';
 import ProjectDetailsPage from 'src/sections/projects/projects-details';
 import ProfilePage from 'src/pages/profile';
+import ReviewPage from 'src/pages/review';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -55,6 +56,7 @@ export default function Router({ authService }) {
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'review', element: <ReviewPage/> },
         { path: 'profile', element: <ProfilePage /> },
         { path: 'team', element: <TeamPage /> },
         { 

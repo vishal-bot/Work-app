@@ -16,7 +16,7 @@ import ProjectInfo from './project-info';
 const ProjectDetailsPage = () => {
 
   const { projectId } = useParams();
-  console.log(projectId);
+  // console.log(projectId);
   const [project, setProject] = useState();
 
   const { VITE_BACKEND_API_URL } = import.meta.env;

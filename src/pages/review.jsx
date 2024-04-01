@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { AboutView } from 'src/sections/about/view';
+import { ReviewView } from 'src/sections/review/view';
 
 // ----------------------------------------------------------------------
 
-export default function AboutPage() {
+export default function ReviewPage() {
   return (
     <>
       <Helmet>
-        <title> About | Work App</title>
+        <title> Review | Work App</title>
       </Helmet>
 
-      <AboutView />
+      <ReviewView />
     </>
   );
 }

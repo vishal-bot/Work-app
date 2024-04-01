@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
-import { Box, List, Paper, Button, Divider, ListItem, TextField, Typography, ListItemText } from '@mui/material';
+import { Box, List, Paper, InputAdornment, Button, Divider, ListItem, TextField, Typography, ListItemText } from '@mui/material';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -15,10 +15,10 @@ export default function TaskDetailPage() {
   const { taskId } = useParams();
   const [task, setTask] = useState(null);
   const [comment, setComment] = useState({
-    task_id:taskId,
-    member_id:sessionStorage.getItem('id'),
-    member_name:sessionStorage.getItem('name'),
-    comment_text:'',
+    task_id: taskId,
+    member_id: sessionStorage.getItem('id'),
+    member_name: sessionStorage.getItem('name'),
+    comment_text: '',
   });
   const [comments, setComments] = useState([]);
   const router = useRouter();
@@ -61,7 +61,7 @@ export default function TaskDetailPage() {
       task_id: taskId,
       member_id: sessionStorage.getItem('id'),
       member_name: sessionStorage.getItem('name'),
-      comment_text:event.target.value,
+      comment_text: event.target.value,
     });
   };
 
@@ -81,7 +81,7 @@ export default function TaskDetailPage() {
           task_id: taskId,
           member_id: sessionStorage.getItem('id'),
           member_name: sessionStorage.getItem('name'),
-          comment_text:'',
+          comment_text: '',
         });
         // router.reload();
       } else {
@@ -93,6 +93,10 @@ export default function TaskDetailPage() {
 
     // Update comments state to include new comment
     // setComments([...comments, comment]);
+  };
+
+  const handleEditComment = (update) => {
+
   };
 
 
@@ -108,7 +112,7 @@ export default function TaskDetailPage() {
           <Paper elevation={3} sx={{ p: 2, }}>
             <Typography variant="h4">{task.task_title}</Typography>
             <Typography variant="body1">{task.task_desc}</Typography>
-            <Typography variant="body2">Creation time: {task.created_at}</Typography>
+            <Typography variant="body2">Creation time: {new Date(task.created_at).toLocaleString()}</Typography>
             <Typography variant="body2">Stage: {task.stage}</Typography>
             <Typography variant="body2">Status: {task.status}</Typography>
             <Typography variant="body2">Priority: {task.priority}</Typography>
@@ -125,8 +129,13 @@ export default function TaskDetailPage() {
                   primary={updates.comment_text}
                   secondary={`${updates.member_name} - ${new Date(updates.timestamp).toLocaleString()}`}
                 />
+                <Tooltip title="Edit">
+                  <IconButton onClick={handleEditComment(updates)}>
+                    <Iconify sx={{ height: 32, width: 32 }} icon="eva:edit-fill" />
+                  </IconButton>
+                </Tooltip>
                 {/* {console.log(new Date(updates.timestamp).toLocaleString("lookup"))} */}
-                          {/* {console.log(format(updates.timestamp.toLocaleString(), 'yyyy/MM/dd kk:mm:ss'))} */}
+                {/* {console.log(format(updates.timestamp.toLocaleString(), 'yyyy/MM/dd kk:mm:ss'))} */}
               </ListItem>
             ))}
           </List>
@@ -141,6 +150,19 @@ export default function TaskDetailPage() {
             label="Add Comment"
             variant="outlined"
             margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <Iconify sx={{ height: 32, width: 32 }} icon="ion:attach" />
+                    <input
+                      type="file"
+                      hidden
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <Button onClick={handlePostComment} variant="contained" color="primary">
             Post Comment

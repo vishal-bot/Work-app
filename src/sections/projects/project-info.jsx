@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 
 
 const ProjectInfo = ({project}) => {
-    console.log(project);
+    // console.log(project);
+    const pro = 'psvd';
     return (
     <div>
         {/* Project details component */}
@@ -15,7 +16,7 @@ const ProjectInfo = ({project}) => {
                 <Paper elevation={3} sx={{ p: 2, }}>
                     <Typography variant="h4">Project Name: {project.project_name}</Typography>
                     <Typography variant="body1">Project Description: {project.project_desc}</Typography>
-                    <Typography variant="body2">Creation time: {project.created_at}</Typography>
+                    <Typography variant="body2">Creation time: {new Date(project.created_at).toLocaleString()}</Typography>
                     <Typography variant="body2">Status: {project.status}</Typography>
                     <Typography variant="body2">Team: {project.team_id}</Typography>
                 </Paper>

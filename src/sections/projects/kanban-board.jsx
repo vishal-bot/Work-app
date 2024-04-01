@@ -30,7 +30,7 @@ const KanbanBoard = ({ project, projectId }) => {
     };
     // Fetch tasks from the database
     fetchTasks();
-  }, [VITE_BACKEND_API_URL, projectId]);
+  }, [VITE_BACKEND_API_URL, projectId, showDragModal]);
   // console.log(tasks);
 
 
@@ -49,40 +49,45 @@ const KanbanBoard = ({ project, projectId }) => {
   };
 
   const onDragEnd = (result) => {
-    setShowDragModal(true);
-
+  
     const { destination, source } = result;
     // setDraggedTask(null);
-    console.log(destination);
+    // console.log(destination);
     // console.log(source);
     if (!destination) {
       return;
     }
-    console.log(draggedTask);
-    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+    // console.log(draggedTask);
+    if (destination.droppableId === source.droppableId) {
       return;
     }
+    // if (destination.droppableId === source.droppableId && destination.index === source.index) {
+    //   return;
+    // }
+    setShowDragModal(true);
 
 
     // Reorder tasks in the same stage
-    const updatedTasks = Array.from(tasks);
-    console.log(tasks?.find((task) => task.task_id === draggedTask));
-    console.log(updatedTasks);
-    const [removedTask] = updatedTasks[source.droppableId].splice(source.index, 1);
-    console.log([removedTask]);
-    updatedTasks[destination.droppableId].splice(destination.index, 0, removedTask);
+    // const updatedTasks = Array.from(tasks);
+    // console.log(tasks?.find((task) => task.task_id === Number(draggedTask)));
+    // console.log(tasks);
+    // const [removedTask] = updatedTasks[source.droppableId].splice(source.index, 1);
+    // console.log([removedTask]);
+    // updatedTasks[destination.droppableId].splice(destination.index, 0, removedTask);
+    const newTask = tasks?.find((task) => task.task_id === Number(draggedTask));
+    newTask.stage = destination.droppableId;
+    setUpdatedTask(newTask);
+    // console.log(updatedTask.stage);
 
 
-
-
-    setTasks(updatedTasks);
+    // setTasks(updatedTasks);
   };
 
-  const handleConfirmModal = (result) => {
+  const handleConfirmModal = () => {
         // Update tasks in the database
     // Implement your API call to update the tasks
     // For example:
-    fetch(`${VITE_BACKEND_API_URL}tasks/stage/${draggedTask}`, {
+    fetch(`${VITE_BACKEND_API_URL}tasks/stage/${Number(draggedTask)}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -90,7 +95,7 @@ const KanbanBoard = ({ project, projectId }) => {
       body: JSON.stringify(updatedTask),
     })
       .then(response => response.json())
-      .then(data => console.log('Updated tasks:', data))
+      // .then(data => console.log('Updated tasks:', data))
       .catch(error => console.error('Error updating tasks:', error));
     setShowDragModal(false);
   }
