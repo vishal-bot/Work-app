@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, Typography, CardContent } from '@mui/material';
 
 const TaskCard = ({ task }) => (
     <Card>

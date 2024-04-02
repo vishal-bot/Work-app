@@ -1,16 +1,19 @@
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Card, Grid, Modal, Paper, Stack, Typography, Button } from '@mui/material';
+import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+
+import { Card, Grid, Paper, Typography } from '@mui/material';
+
 import { useRouter } from 'src/routes/hooks';
+
 import TaskDragModal from "./task-drag-modal";
 
 const KanbanBoard = ({ project, projectId }) => {
   const router = useRouter();
-  const [stages, setStages] = useState(['ToDo', 'InProgress', 'Done']);
+  const [stages] = useState(['ToDo', 'InProgress', 'Done']);
   const [tasks, setTasks] = useState([]);
   const [draggedTask, setDraggedTask] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [updatedTask, setUpdatedTask] = useState();
   const [showDragModal, setShowDragModal] = useState(false);
 

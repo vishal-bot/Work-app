@@ -1,42 +1,59 @@
 import React, { useState, useEffect } from 'react';
 
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Fade from '@mui/material/Fade';
-
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { Toolbar } from '@mui/material';
+import Toolbar from '@mui/material/Toolbar';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Grid, Card, Stack, Badge, Checkbox, Accordion, Typography, AccordionDetails, AccordionSummary, FormControlLabel } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
+import './user-updates.css';
 // ----------------------------------------------------------------------
 
 
 export default function UserUpdates() {
 
-  // const [expanded, setExpanded] = React.useState('panel1');
-
-  // const handleChange = (panel) => (event, newExpanded) => {
-  //   setExpanded(newExpanded ? panel : false);
-  // };
-
-  const [expanded, setExpanded] = useState(false);
-
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
-
+  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [checkedUsers, setCheckedUsers] = useState([]);
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
+
+  useEffect(() => {
+    // Fetch users data from API
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/data.json');
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
+  const handleCheckboxChange = (event, userId) => {
+    if (event.target.checked) {
+      setCheckedUsers([...checkedUsers, userId]);
+    } else {
+      setCheckedUsers(checkedUsers.filter(id => id !== userId));
+    }
+  };
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : null);
+  };
+
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const isUserSelected = (userId) => checkedUsers.includes(userId);
 
   return (
     <Card
@@ -49,71 +66,88 @@ export default function UserUpdates() {
         borderRadius: 2,
       }}
     >
-      <Toolbar
-        sx={{
-          height: 96,
-          display: 'flex',
-          justifyContent: 'space-between',
-          p: (theme) => theme.spacing(0, 1, 0, 3),
-          '--Grid-borderWidth': '1px',
-          border: 'var(--Grid-borderWidth) dashed',
-          borderColor: 'divider',
-        }}
-      >
-        <OutlinedInput
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Search user..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Iconify
-                icon="eva:search-fill"
-                sx={{ color: 'text.disabled', width: 20, height: 20 }}
+      <Stack>
+        <Toolbar
+          sx={{
+            height: 96,
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: (theme) => theme.spacing(0, 1, 0, 3),
+          }}
+        >
+          <OutlinedInput
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search user..."
+            startAdornment={
+              <InputAdornment position="start">
+                <Iconify
+                  icon="eva:search-fill"
+                  sx={{ color: 'text.disabled', width: 20, height: 20 }}
+                />
+              </InputAdornment>
+            }
+          />
+          <Stack
+            direction="row"
+            // alignItems="center"
+            // flexWrap="wrap-reverse"
+            justifyContent="flex-end"
+            spacing={2}
+          >
+            <Badge badgeContent={checkedUsers.length} color="primary">
+              Checked Users
+            </Badge>
+          </Stack>
+        </Toolbar>
+      </Stack>
+      <Stack sx={{ mt: 5 }}>
+        {filteredUsers.map((user, index) => (
+          <Accordion
+            key={index}
+            expanded={expandedAccordion === `panel${index}`}
+            onChange={handleAccordionChange(`panel${index}`)}
+          // disabled={checkedUsers.includes(user.id)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${index}bh-content`}
+              id={`panel${index}bh-header`}
+              className={isUserSelected(user.id) ? 'selected-accordion' : ''}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isUserSelected(user.id)}
+                    onChange={(event) => handleCheckboxChange(event, user.id)}
+                  />
+                }
+                label=""
               />
-            </InputAdornment>
-          }
-        />
-      </Toolbar>
-      <Stack sx={{ p: 3 }}>
-      <Accordion
-        expanded={expanded}
-        onChange={handleExpansion}
-        slots={{ transition: Fade }}
-        slotProps={{ transition: { timeout: 400 } }}
-        sx={{
-          '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          <Typography>Custom transition using Fade</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography>Default transition using Collapse</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+              <Typography>{user.name}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">Role: {user.role}</Typography>
+                </Grid>
+                {/* Add other user details as required */}
+                {/* Example: */}
+                <Grid item xs={12}>
+                  <Typography>Email: {user.email}</Typography>
+                </Grid>
+                {/* Add other updates related to the user */}
+                {/* Example: */}
+                <Grid item xs={12}>
+                  <Typography variant="h6">Updates:</Typography>
+                  {user.updates.map((update, i) => (
+                    <Typography key={index}>{update}</Typography>
+                  ))}
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        ))}
       </Stack>
     </Card>
   );

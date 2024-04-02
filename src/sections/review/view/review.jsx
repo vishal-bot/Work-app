@@ -7,8 +7,6 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import { RouterLink } from 'src/routes/components';
 
-
-
 import Iconify from 'src/components/iconify';
 
 import UserUpdates from '../user-updates';

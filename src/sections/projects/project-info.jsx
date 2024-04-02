@@ -6,9 +6,7 @@ import PropTypes from "prop-types";
 
 
 const ProjectInfo = ({project}) => {
-    // console.log(project);
-    const pro = 'psvd';
-    return (
+    (
     <div>
         {/* Project details component */}
         {project && (

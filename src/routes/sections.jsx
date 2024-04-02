@@ -1,12 +1,12 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import ReviewPage from 'src/pages/review';
+import ProfilePage from 'src/pages/profile';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import ProjectListPage from 'src/sections/projects/projects-list';
 import ProjectDetailsPage from 'src/sections/projects/projects-details';
-import ProfilePage from 'src/pages/profile';
-import ReviewPage from 'src/pages/review';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));

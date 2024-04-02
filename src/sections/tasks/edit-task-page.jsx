@@ -5,10 +5,10 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { Box, Select, Button, MenuItem, TextField, Typography, InputLabel, FormControl, Autocomplete } from '@mui/material';
 
-import Iconify from 'src/components/iconify';
-
-import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
+
+import Iconify from 'src/components/iconify';
 
 export default function EditTaskPage() {
   const router = useRouter();

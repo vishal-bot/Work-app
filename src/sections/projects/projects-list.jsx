@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { List, GridOn } from '@mui/icons-material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Grid, Card, Divider, Container, IconButton } from '@mui/material';
+import { Grid, Card, Divider, IconButton } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
