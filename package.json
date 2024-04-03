@@ -20,13 +20,13 @@
     "vite:build": "vite build"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@faker-js/faker": "^8.1.0",
     "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.15.10",
     "@mui/lab": "^5.0.0-alpha.147",
-    "@mui/material": "^5.15.10",
+    "@mui/material": "^5.15.14",
     "apexcharts": "^3.43.0",
     "axios": "^1.6.7",
     "date-fns": "^2.30.0",
@@ -59,7 +59,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "prettier": "^3.0.3",
-    "vite": "^4.5.2",
+    "vite": "^4.5.3",
     "vite-plugin-checker": "^0.6.2"
   }
 }

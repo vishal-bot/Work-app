@@ -5,8 +5,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import PropTypes from "prop-types";
 
 
-const ProjectInfo = ({project}) => {
-    (
+const ProjectInfo = ({project}) => (
     <div>
         {/* Project details component */}
         {project && (
@@ -22,7 +21,7 @@ const ProjectInfo = ({project}) => {
         )}
     </div>
     )
-}
+    
 export default ProjectInfo;
 
 ProjectInfo.propTypes = {

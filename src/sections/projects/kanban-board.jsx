@@ -169,7 +169,7 @@ const KanbanBoard = ({ project, projectId }) => {
 };
 
 KanbanBoard.propTypes = {
-  project: PropTypes.object.isRequired,
+  project: PropTypes.object,
   projectId: PropTypes.string.isRequired,
 }
 

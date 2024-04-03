@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
+import { DatePicker } from '@mui/lab';
 import Toolbar from '@mui/material/Toolbar';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Grid, Card, Stack, Badge, Checkbox, Accordion, Typography, AccordionDetails, AccordionSummary, FormControlLabel } from '@mui/material';
+import { Box, Grid, Card, Badge, Checkbox, Accordion, TextField, Typography, AccordionDetails, AccordionSummary, FormControlLabel } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import './user-updates.css';
 // ----------------------------------------------------------------------
 
 
@@ -17,10 +17,11 @@ export default function UserUpdates() {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [checkedUsers, setCheckedUsers] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [expandedAccordion, setExpandedAccordion] = useState(null);
 
   useEffect(() => {
-    // Fetch users data from API
+    // Fetch users data from API with selected date
     const fetchUsers = async () => {
       try {
         const response = await fetch('/data.json');
@@ -31,7 +32,7 @@ export default function UserUpdates() {
       }
     };
     fetchUsers();
-  }, []);
+  }, [selectedDate]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -53,20 +54,10 @@ export default function UserUpdates() {
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const isUserSelected = (userId) => checkedUsers.includes(userId);
-
   return (
-    <Card
-      component={Stack}
-      spacing={3}
-      direction="row"
-      sx={{
-        px: 3,
-        py: 5,
-        borderRadius: 2,
-      }}
-    >
-      <Stack>
+    <>
+      <Card
+      >
         <Toolbar
           sx={{
             height: 96,
@@ -88,68 +79,78 @@ export default function UserUpdates() {
               </InputAdornment>
             }
           />
-          <Stack
-            direction="row"
-            // alignItems="center"
-            // flexWrap="wrap-reverse"
-            justifyContent="flex-end"
-            spacing={2}
-          >
-            <Badge badgeContent={checkedUsers.length} color="primary">
-              Checked Users
-            </Badge>
-          </Stack>
+          <DatePicker
+            label="Select Date"
+            value={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            renderInput={(params) => <TextField {...params} variant="outlined" />}
+            sx={{ mb: 2 }}
+          />
+          <Badge badgeContent={checkedUsers.length} color="primary">Review Completed</Badge>
         </Toolbar>
-      </Stack>
-      <Stack sx={{ mt: 5 }}>
-        {filteredUsers.map((user, index) => (
-          <Accordion
+      </Card>
+      <Box
+      sx={{
+        mt:3,
+      }}
+      >
+          {filteredUsers.map((user, index) => (
+            <Card
             key={index}
-            expanded={expandedAccordion === `panel${index}`}
-            onChange={handleAccordionChange(`panel${index}`)}
-          // disabled={checkedUsers.includes(user.id)}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${index}bh-content`}
-              id={`panel${index}bh-header`}
-              className={isUserSelected(user.id) ? 'selected-accordion' : ''}
+              sx={{
+                m:1,
+                borderRadius: 2,
+              }}
             >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isUserSelected(user.id)}
-                    onChange={(event) => handleCheckboxChange(event, user.id)}
+              <Accordion
+                key={index}
+                expanded={expandedAccordion === `panel${index}`}
+                onChange={handleAccordionChange(`panel${index}`)}
+              // slots={{ transition: Fade }}
+              // slotProps={{ transition: { timeout: 400 } }}
+              // disabled={checkedUsers.includes(user.id)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${index}bh-content`}
+                  id={`panel${index}bh-header`}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={checkedUsers.includes(user.id)}
+                        onChange={(event) => handleCheckboxChange(event, user.id)}
+                      />
+                    }
+                    label=""
                   />
-                }
-                label=""
-              />
-              <Typography>{user.name}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">Role: {user.role}</Typography>
-                </Grid>
-                {/* Add other user details as required */}
-                {/* Example: */}
-                <Grid item xs={12}>
-                  <Typography>Email: {user.email}</Typography>
-                </Grid>
-                {/* Add other updates related to the user */}
-                {/* Example: */}
-                <Grid item xs={12}>
-                  <Typography variant="h6">Updates:</Typography>
-                  {user.updates.map((update, i) => (
-                    <Typography key={index}>{update}</Typography>
-                  ))}
-                </Grid>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </Stack>
-    </Card>
+                  <Typography>{user.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Role: {user.role}</Typography>
+                    </Grid>
+                    {/* Add other user details as required */}
+                    {/* Example: */}
+                    <Grid item xs={12}>
+                      <Typography>Email: {user.email}</Typography>
+                    </Grid>
+                    {/* Add other updates related to the user */}
+                    {/* Example: */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Updates:</Typography>
+                      {user.updates.map((update, i) => (
+                        <Typography key={i}>{update}</Typography>
+                      ))}
+                    </Grid>
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </Card>
+          ))}
+      </Box>
+    </>
   );
 }
 

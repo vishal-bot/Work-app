@@ -1,4 +1,4 @@
-import React from 'react';
+// import React, { useState} from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { Button } from '@mui/material';
@@ -10,14 +10,14 @@ import Iconify from 'src/components/iconify';
 
 const ProjectView = () => {
 
- const handleAddTask = () => {
+ const handleAddProject = () => {
   // router.push('/tasks/addTask');
 }
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Projects</Typography>
-        <Button variant="contained" color="inherit" onClick={handleAddTask} startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" onClick={handleAddProject} startIcon={<Iconify icon="eva:plus-fill" />}>
           Add Project
         </Button>
       </Stack>

@@ -2,8 +2,8 @@
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
+import { Grid, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { Box, Grid, Typography } from '@mui/material';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -29,13 +29,13 @@ export default function ReviewView() {
         </Typography>
       </Stack>
       {/* <Stack sx={{m:5}}><ReviewDetails /></Stack> */}
-      <Box>
+      <Stack>
         <Grid container spacing={2}>
-          <Grid xs={12} sm={12} md={12} lg={12}>
-            <UserUpdates /> 
+          <Grid item xs={12} sm={12} md={12}>
+            <UserUpdates />
           </Grid>
         </Grid>
-      </Box>
+      </Stack>
 
 
     </Container>
