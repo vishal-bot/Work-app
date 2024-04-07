@@ -1,4 +1,12 @@
 .selected-accordion {
     background-color: lightblue;
   }
+
+.visited{
+  background-color: lightgreen;
+}
+
+.active{
+  background-color: blue;
+}
   

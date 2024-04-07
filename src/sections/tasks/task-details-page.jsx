@@ -113,6 +113,7 @@ export default function TaskDetailPage() {
             <Typography variant="h4">{task.task_title}</Typography>
             <Typography variant="body1">{task.task_desc}</Typography>
             <Typography variant="body2">Creation time: {new Date(task.created_at).toLocaleString()}</Typography>
+            <Typography variant="body2">Created By: {task.created_by}</Typography>
             <Typography variant="body2">Stage: {task.stage}</Typography>
             <Typography variant="body2">Status: {task.status}</Typography>
             <Typography variant="body2">Priority: {task.priority}</Typography>

@@ -25,6 +25,7 @@ export default function AddTaskPage() {
     priority: '',
     assigned_to: '',
     project_id: '',
+    created_by: sessionStorage.getItem('id'),
   });
 
   useEffect(() => {
@@ -101,6 +102,7 @@ export default function AddTaskPage() {
           priority: '',
           assigned_to: '',
           project_id: '',
+          created_by: sessionStorage.getItem('id'),
         });
         setSelectedProject(null);
         router.push('/tasks');

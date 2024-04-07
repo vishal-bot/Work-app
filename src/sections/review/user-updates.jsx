@@ -1,156 +1,213 @@
 import React, { useState, useEffect } from 'react';
 
-import { DatePicker } from '@mui/lab';
-import Toolbar from '@mui/material/Toolbar';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Grid, Card, Badge, Checkbox, Accordion, TextField, Typography, AccordionDetails, AccordionSummary, FormControlLabel } from '@mui/material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { Box, Grid, Paper, Checkbox, TextField, IconButton, Typography, FormControlLabel } from '@mui/material';
 
-import Iconify from 'src/components/iconify';
-
-// ----------------------------------------------------------------------
+// import "./user-updates.css";
+import UserContent from './user-content';
 
 
-export default function UserUpdates() {
+const images = [
+  {
+    url: `/assets/images/carousel/image-1.jpg`,
+    caption: 'First Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-2.jpg`,
+    caption: 'Second Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-3.jpg`,
+    caption: 'Third Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-4.jpg`,
+    caption: 'Fourth Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-5.jpg`,
+    caption: 'Fifth Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-6.jpg`,
+    caption: 'Sixth Slide',
+  },
+  {
+    url: `/assets/images/carousel/image-7.jpg`,
+    caption: 'Seventh Slide',
+  },
+];
 
+const Dashboard = () => {
   const [users, setUsers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [checkedUsers, setCheckedUsers] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [expandedAccordion, setExpandedAccordion] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [visitedUsers, setVisitedUsers] = useState([]);
+  const { VITE_BACKEND_API_URL } = import.meta.env;
 
   useEffect(() => {
-    // Fetch users data from API with selected date
+    // Fetch users data
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/data.json');
+        // Make API call to fetch users
+        const response = await fetch(`${VITE_BACKEND_API_URL}team/${sessionStorage.getItem('teamId')}`);
         const data = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
+
     fetchUsers();
-  }, [selectedDate]);
+  }, [VITE_BACKEND_API_URL]);
+
+
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    setVisitedUsers([...visitedUsers, user.member_id]);
+    // Check if the user has already been visited
+  };
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-
-  const handleCheckboxChange = (event, userId) => {
-    if (event.target.checked) {
-      setCheckedUsers([...checkedUsers, userId]);
-    } else {
-      setCheckedUsers(checkedUsers.filter(id => id !== userId));
-    }
-  };
-
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpandedAccordion(isExpanded ? panel : null);
-  };
-
   const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!paused) {
+        setActiveIndex((prevIndex) =>
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+      }
+    }, 3000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [paused]);
+
+  const handlePrevClick = () => {
+    setActiveIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+  };
+
+  const handleNextClick = () => {
+    setActiveIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+  };
+
+  const handleMouseDown = () => {
+    setPaused(true);
+  };
+
+  const handleMouseUp = () => {
+    setPaused(false);
+  };
 
   return (
-    <>
-      <Card
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={10}
       >
-        <Toolbar
-          sx={{
-            height: 96,
-            display: 'flex',
-            justifyContent: 'space-between',
-            p: (theme) => theme.spacing(0, 1, 0, 3),
-          }}
-        >
-          <OutlinedInput
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search user..."
-            startAdornment={
-              <InputAdornment position="start">
-                <Iconify
-                  icon="eva:search-fill"
-                  sx={{ color: 'text.disabled', width: 20, height: 20 }}
-                />
-              </InputAdornment>
-            }
-          />
-          <DatePicker
-            label="Select Date"
-            value={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            renderInput={(params) => <TextField {...params} variant="outlined" />}
-            sx={{ mb: 2 }}
-          />
-          <Badge badgeContent={checkedUsers.length} color="primary">Review Completed</Badge>
-        </Toolbar>
-      </Card>
-      <Box
-      sx={{
-        mt:3,
-      }}
-      >
-          {filteredUsers.map((user, index) => (
-            <Card
-            key={index}
+        {selectedUser === null ? (
+          <Box
+            sx={{
+              '--Grid-borderWidth': '1px',
+              border: 'var(--Grid-borderWidth) dashed',
+              borderColor: 'divider',
+              p: 4,
+            }}
+          >
+            <Typography variant="h3" sx={{ mb: 2, textAlign: 'center' }}>Welcome to User&apos;s Review Area &#128591;</Typography>
+            <Box
               sx={{
-                m:1,
-                borderRadius: 2,
+                position: 'relative', margin: 'auto',
+                cursor: paused ? 'grab' : 'pointer',
+                transition: 'cursor 0.3s ease',
               }}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
             >
-              <Accordion
-                key={index}
-                expanded={expandedAccordion === `panel${index}`}
-                onChange={handleAccordionChange(`panel${index}`)}
-              // slots={{ transition: Fade }}
-              // slotProps={{ transition: { timeout: 400 } }}
-              // disabled={checkedUsers.includes(user.id)}
+              <img
+                src={images[activeIndex].url}
+                alt={`carousel-item-${activeIndex}`}
+                style={{ width: '100%', height: 'auto' }}
+              />
+              <Typography
+                variant="h5"
+                component="div"
+                color="text.primary"
+                sx={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '5px 10px', borderRadius: 5 }}
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${index}bh-content`}
-                  id={`panel${index}bh-header`}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={checkedUsers.includes(user.id)}
-                        onChange={(event) => handleCheckboxChange(event, user.id)}
-                      />
-                    }
-                    label=""
-                  />
-                  <Typography>{user.name}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Role: {user.role}</Typography>
-                    </Grid>
-                    {/* Add other user details as required */}
-                    {/* Example: */}
-                    <Grid item xs={12}>
-                      <Typography>Email: {user.email}</Typography>
-                    </Grid>
-                    {/* Add other updates related to the user */}
-                    {/* Example: */}
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Updates:</Typography>
-                      {user.updates.map((update, i) => (
-                        <Typography key={i}>{update}</Typography>
-                      ))}
-                    </Grid>
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Card>
-          ))}
-      </Box>
-    </>
-  );
-}
+                {images[activeIndex].caption}
+              </Typography>
+              <IconButton
+                onClick={handlePrevClick}
+                sx={{ position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
+              >
+                <ArrowBack />
+              </IconButton>
+              <IconButton
+                onClick={handleNextClick}
+                sx={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
+              >
+                <ArrowForward />
+              </IconButton>
+            </Box>
+            <Typography variant='h4' sx={{ textAlign: 'right' }}>Click on User list &#128073; to start</Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              '--Grid-borderWidth': '2px',
+              border: 'var(--Grid-borderWidth) dashed',
+              borderColor: 'divider',
+              height: '100%',
+              p: 2,
+            }}
+          >
+            <UserContent user={selectedUser} />
+          </Box>
+        )}
 
+      </Grid>
+      <Grid item xs={12} sm={2}>
+        <TextField
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search user..."
+          label="Search User"
+          variant="outlined"
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        {filteredUsers.map((user) => (
+          <Paper
+            key={user.member_id}
+            sx={{ my: 1 }}
+          >
+            <FormControlLabel
+              sx={{ px: 2 }}
+              control={
+                <Checkbox
+                  checked={selectedUser !== null ? selectedUser.member_id === user.member_id : false}
+                  onChange={() => handleUserClick(user)}
+
+                />
+              }
+              label={user.name}
+              className={visitedUsers.includes(user.member_id) ? 'visited' : ''}
+            // className={selectedUser === user.member_id ? 'active' : ''}
+            />
+          </Paper>
+        ))}
+      </Grid>
+
+    </Grid>
+  );
+};
+
+export default Dashboard;

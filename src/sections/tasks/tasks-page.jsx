@@ -52,7 +52,7 @@ const TaskMainPage = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/team/${sessionStorage.getItem('teamId')}`, {
+        const response = await fetch(`${VITE_BACKEND_API_URL}tasks/user/${sessionStorage.getItem('teamId')}/${sessionStorage.getItem('id')}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -65,7 +65,7 @@ const TaskMainPage = () => {
       }
     };
     fetchTasks();
-  }, [VITE_BACKEND_API_URL]);
+  }, [VITE_BACKEND_API_URL, showDeleteModal]);
 
   useEffect(() => {
     const filterTasks = (taskList) => {
